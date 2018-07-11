@@ -1,7 +1,17 @@
-/**
- * @module ol/uri
- */
+///**
+// * @module ol/uri
+// */
+//
+//
 
+#ifndef OLQT5_URI_H
+#define OLQT5_URI_H
+
+#include <string>
+#include <vector>
+#include <tuple>
+
+namespace olqt {
 
 /**
  * Appends query parameters to a URI.
@@ -11,18 +21,8 @@
  *     and the values are arbitrary types or arrays.
  * @return {string} The new URI.
  */
-export function appendParams(uri, params) {
-  const keyParams = [];
-  // Skip any null or undefined parameter values
-  Object.keys(params).forEach(function(k) {
-    if (params[k] !== null && params[k] !== undefined) {
-      keyParams.push(k + '=' + encodeURIComponent(params[k]));
-    }
-  });
-  const qs = keyParams.join('&');
-  // remove any trailing ? or &
-  uri = uri.replace(/[?&]$/, '');
-  // append ? or & depending on whether uri has existing parameters
-  uri = uri.indexOf('?') === -1 ? uri + '?' : uri + '&';
-  return uri + qs;
-}
+
+std::string appendParams(std::string uri, std::vector<std::tuple<std::string, std::string>> const &params);
+
+} //
+#endif // OLQT5_URI_H
