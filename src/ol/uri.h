@@ -11,6 +11,8 @@
 #include <vector>
 #include <tuple>
 
+#include "dll_export.h"
+
 namespace olqt {
 
 /**
@@ -22,7 +24,7 @@ namespace olqt {
  * @return {string} The new URI.
  */
 
-std::string appendParams(std::string uri, std::vector<std::tuple<std::string, std::string>> const &params);
+std::string OLQT_EXPORT appendParams(std::string uri, std::vector<std::tuple<std::string, std::string>> const &params);
 
 } //
 #endif // OLQT5_URI_H
