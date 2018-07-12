@@ -23,7 +23,7 @@ std::string join(std::vector<std::string> const &v, std::string const &d)
     return r;
 }
 
-std::string olqt::appendParams(std::string uri, std::vector<std::tuple<std::string, std::string>> const & params)
+std::string ol::appendParams(std::string uri, std::vector<std::tuple<std::string, std::string>> const & params)
 {
     //export function appendParams(uri, params) {
     //  const keyParams = [];

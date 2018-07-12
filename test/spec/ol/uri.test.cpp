@@ -8,7 +8,7 @@
 
 #include "../../../src/ol/uri.h"
 
-using namespace olqt;
+using namespace ol;
 
 //
 //

@@ -22,7 +22,7 @@ if(BUILD_TESTS)
     ExternalProject_Add(
         googletest_build
 	GIT_REPOSITORY    https://github.com/google/googletest.git
-	GIT_TAG           "41f0e24335d8874cc87420a6349bb1844e2a15de"  #"release-1.8.0"
+	GIT_TAG           "41f0e24335d8874cc87420a6349bb1844e2a15de"
 	SOURCE_DIR        "${CMAKE_BINARY_DIR}/googletest_src"
 	BINARY_DIR        "${CMAKE_BINARY_DIR}/googletest_build"
 	TEST_COMMAND      ""

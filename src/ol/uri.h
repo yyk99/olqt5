@@ -13,7 +13,7 @@
 
 #include "dll_export.h"
 
-namespace olqt {
+namespace ol {
 
 /**
  * Appends query parameters to a URI.
