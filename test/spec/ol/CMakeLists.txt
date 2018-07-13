@@ -28,5 +28,7 @@ set_target_properties(copy_olqt PROPERTIES FOLDER "test")
 add_ol_test(uri)
 add_ol_test(string)
 add_ol_test(assertionerror)
+add_ol_test(geolocation)
+add_ol_test(tilecache)
 
 # end of file
