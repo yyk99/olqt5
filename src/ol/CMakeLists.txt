@@ -3,13 +3,98 @@
 #
 
 set(OLQT_SRC
+    AssertionError.cpp
+    AssertionError.h
+    Collection.h
+    CollectionEventType.h
+    Disposable.h
+    Feature.h
+    Geolocation.h
+    GeolocationProperty.h
+    Graticule.h
+    Image.h
+    ImageBase.h
+    ImageCanvas.h
+    ImageState.h
+    ImageTile.h
+    Kinetic.h
+    LayerType.h
+    Map.h
+    MapBrowserEvent.h
+    MapBrowserEventHandler.h
+    MapBrowserEventType.h
+    MapBrowserPointerEvent.h
+    MapEvent.h
+    MapEventType.h
+    MapProperty.h
+    Object.h
+    ObjectEventType.h
+    Observable.h
+    Overlay.h
+    OverlayPositioning.h
+    PluggableMap.h
+    Tile.h
+    TileCache.h
+    TileQueue.h
+    TileRange.h
+    TileState.h
+    VectorImageTile.h
+    VectorTile.h
+    View.h
+    ViewHint.h
+    ViewProperty.h
+    WebGLMap.h
+    array.h
+    asserts.h
+    centerconstraint.h
+    color.h
+    colorlike.h
+    control.h
+    coordinate.h
+    css.h
     dll_export.h
+    dom.h
+    easing.h
+    events.h
+    extent.h
+    featureloader.h
+    format.h
+    functions.h
+    geom.h
+    has.h
+    index.cpp
+    index.h
+    interaction.h
+    layer.h
+    loadingstrategy.h
+    math.h
+    net.h
+    obj.h
+    optional.h
+    proj.h
+    render.h
+    reproj.h
+    resolutionconstraint.h
+    rotationconstraint.h
+    size.h
+    source.h
+    sphere.h
     string.cpp
     string.h
+    style.h
+    tilecoord.h
+    tilegrid.h
+    tileurlfunction.h
+    transform.h
     uri.cpp
     uri.h
+    util.cpp
+    util.h
+    webgl.h
+    xml.h
 )
 
 add_library(olqt SHARED ${OLQT_SRC})
+set_target_properties(olqt PROPERTIES FOLDER "src")
 
 # end of file

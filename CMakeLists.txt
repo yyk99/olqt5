@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 3.10)
 
 option (BUILD_TESTS "Buyild tests" ON)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON) 
 add_subdirectory(src)
 
 if(BUILD_TESTS)
