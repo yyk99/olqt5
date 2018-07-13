@@ -373,5 +373,6 @@ set(OLQT_SRC
 
 add_library(olqt SHARED ${OLQT_SRC})
 set_target_properties(olqt PROPERTIES FOLDER "src")
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/.. FILES ${OLQT_SRC})
 
 # end of file
