@@ -35,6 +35,7 @@
 //export {default as WebGLMap} from './WebGLMap.js';
 //
 //export {getUid, inherits, VERSION} from './util.js';
+#include "util.h"
 
 /**
  * An array with two elements, representing a pixel. The first element is the
