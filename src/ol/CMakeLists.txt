@@ -348,6 +348,7 @@ set(OLQT_SRC
     ./tilegrid/TileGrid.h
     ./tilegrid/WMTS.h
     ./TileQueue.h
+    ./TileRange.cpp
     ./TileRange.h
     ./TileState.h
     ./tileurlfunction.h
