@@ -33,5 +33,6 @@ add_ol_test(tilecache)
 add_ol_test(index)
 add_ol_test(disposable)
 add_ol_test(rotationconstraint)
+add_ol_test(vectortile)
 
 # end of file

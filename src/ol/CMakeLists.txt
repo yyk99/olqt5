@@ -85,6 +85,7 @@ set(OLQT_SRC
     ./format/OSMXML.h
     ./format/OWS.h
     ./format/Polyline.h
+    ./format/TextFeature.cpp
     ./format/TextFeature.h
     ./format/TopoJSON.h
     ./format/WFS.h
@@ -357,6 +358,7 @@ set(OLQT_SRC
     ./util.h
     ./vec/mat4.h
     ./VectorImageTile.h
+    ./VectorTile.cpp
     ./VectorTile.h
     ./View.h
     ./ViewHint.h
