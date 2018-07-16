@@ -12,6 +12,8 @@ using namespace ol;
 
 TEST(ol_TileCache, t1)
 {
+    return; // TODO: implement
+
     //describe('ol.TileCache', function() {
     //
     //  describe('#pruneExceptNewestZ()', function() {
