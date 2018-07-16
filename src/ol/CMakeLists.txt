@@ -277,6 +277,7 @@ set(OLQT_SRC
     ./reproj/Tile.h
     ./reproj/Triangulation.h
     ./resolutionconstraint.h
+    ./rotationconstraint.cpp
     ./rotationconstraint.h
     ./size.h
     ./source.h

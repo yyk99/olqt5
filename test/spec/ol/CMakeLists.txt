@@ -32,5 +32,6 @@ add_ol_test(geolocation)
 add_ol_test(tilecache)
 add_ol_test(index)
 add_ol_test(disposable)
+add_ol_test(rotationconstraint)
 
 # end of file
