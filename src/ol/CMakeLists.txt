@@ -33,11 +33,14 @@ set(OLQT_SRC
     ./dll_export.h
     ./dom.h
     ./easing.h
+    ./events.cpp
     ./events.h
     ./events/condition.h
+    ./events/Event.cpp
     ./events/Event.h
     ./events/EventTarget.cpp
     ./events/EventTarget.h
+    ./events/EventType.cpp
     ./events/EventType.h
     ./events/KeyCode.h
     ./extent.h
@@ -98,6 +101,7 @@ set(OLQT_SRC
     ./format/XMLFeature.h
     ./format/xsd.h
     ./functions.h
+    ./Geolocation.cpp
     ./Geolocation.h
     ./GeolocationProperty.h
     ./geom.h
@@ -195,7 +199,9 @@ set(OLQT_SRC
     ./obj.h
     ./Object.cpp
     ./Object.h
+    ./ObjectEventType.cpp
     ./ObjectEventType.h
+    ./Observable.cpp
     ./Observable.h
     ./optional.h
     ./Overlay.h

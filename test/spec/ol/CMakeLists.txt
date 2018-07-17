@@ -3,11 +3,13 @@
 #
 
 macro(add_ol_test name)
-    add_executable(${name}_test ${name}.test.cpp)
-    target_link_libraries(${name}_test olqt ${GTEST_BOTH_LIBS})
-    add_dependencies(${name}_test googletest_build copy_olqt)
-    add_test(${name}_test ${name}_test)
-    set_target_properties(${name}_test PROPERTIES FOLDER "test")
+    string(REPLACE "/" "_" _name ${name})
+    set (name_test ${_name}_test)
+    add_executable(${name_test} ${name}.test.cpp)
+    target_link_libraries(${name_test} olqt ${GTEST_BOTH_LIBS})
+    add_dependencies(${name_test} googletest_build copy_olqt)
+    add_test(${name_test} ${name_test})
+    set_target_properties(${name_test} PROPERTIES FOLDER "test")
 endmacro(add_ol_test)
 
 include_directories(${GTEST_SOURCE_DIR}/include ${GTEST_SOURCE_DIR}/src)
@@ -36,5 +38,7 @@ add_ol_test(rotationconstraint)
 add_ol_test(vectortile)
 add_ol_test(tilerange)
 add_ol_test(size)
+add_ol_test(object)
 
+add_ol_test(events/eventtarget)
 # end of file

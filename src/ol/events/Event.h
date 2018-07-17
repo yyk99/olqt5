@@ -1,6 +1,15 @@
+#ifndef OL_EVENTS_EVENT_H
+#define OL_EVENTS_EVENT_H
 /**
  * @module ol/events/Event
  */
+
+#include "EventType.h"
+#include "../dll_export.h"
+
+namespace ol {
+namespace events {
+
 /**
  * @classdesc
  * Stripped down implementation of the W3C DOM Level 2 Event interface.
@@ -14,60 +23,78 @@
  * @constructor
  * @param {string} type Type.
  */
-const Event = function(type) {
 
-  /**
-   * @type {boolean}
-   */
-  this.propagationStopped;
+class OLQT_EXPORT Event 
+{
+public:
+    EventType::_type type;
+    void *target;
+    bool propagationStopped;
 
-  /**
-   * The event type.
-   * @type {string}
-   * @api
-   */
-  this.type = type;
+    Event(EventType::_type type) 
+        : type(type), target(0), propagationStopped()
+    {
+        //const Event = function(type) {
+        //
+        //  /**
+        //   * @type {boolean}
+        //   */
+        //  this.propagationStopped;
+        //
+        //  /**
+        //   * The event type.
+        //   * @type {string}
+        //   * @api
+        //   */
+        //  this.type = type;
+        //
+        //  /**
+        //   * The event target.
+        //   * @type {Object}
+        //   * @api
+        //   */
+        //  this.target = null;
+        //
+    }
 
-  /**
-   * The event target.
-   * @type {Object}
-   * @api
-   */
-  this.target = null;
-
+    virtual ~Event();
+    
+    /**
+     * Stop event propagation.
+     * @function
+     * @api
+     */
+    virtual void preventDefault() {}
+    
+      /**
+       * Stop event propagation.
+       * @function
+       * @api
+       */
+    virtual void stopPropagation() 
+    {
+        propagationStopped = true;
+    }
+    
+    
+    /**
+     * @param {Event|module:ol/events/Event} evt Event
+     */
+    static void stopPropagation(Event *evt) 
+    {
+      evt->stopPropagation();
+    }
+    
+    /**
+     * @param {Event|module:ol/events/Event} evt Event
+     */
+    static void preventDefault(Event *evt) 
+    {
+      evt->preventDefault();
+    }
 };
 
-
-/**
- * Stop event propagation.
- * @function
- * @api
- */
-Event.prototype.preventDefault =
-
-  /**
-   * Stop event propagation.
-   * @function
-   * @api
-   */
-  Event.prototype.stopPropagation = function() {
-    this.propagationStopped = true;
-  };
-
-
-/**
- * @param {Event|module:ol/events/Event} evt Event
- */
-export function stopPropagation(evt) {
-  evt.stopPropagation();
+//export default Event;
 }
-
-
-/**
- * @param {Event|module:ol/events/Event} evt Event
- */
-export function preventDefault(evt) {
-  evt.preventDefault();
 }
-
-export default Event;
+#endif // OL_EVENTS_EVENT_H

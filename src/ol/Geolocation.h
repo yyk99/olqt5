@@ -62,7 +62,10 @@ namespace ol {
 // * @api
 // */
 
-class OLQT_EXPORT Geolocation : public ol::BaseObject {};
+class OLQT_EXPORT Geolocation : public ol::BaseObject {
+public:
+    Geolocation();
+};
 
 //const Geolocation = function(opt_options) {
 //
