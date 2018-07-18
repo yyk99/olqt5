@@ -46,7 +46,8 @@ class EventsKey {};
  */
 class ListenerFunction {
 public:
-    virtual bool operator () (ol::events::Event const &evt) { return true; };
+    virtual bool operator () (ol::events::Event &evt) { return true; };
+    virtual bool operator () (ol::events::EventTarget *that, ol::events::Event &evt) { return true; };
 };
 
 typedef std::shared_ptr<ListenerFunction> ListenerF;

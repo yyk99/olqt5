@@ -14,7 +14,7 @@ public:
 
         }
 
-        virtual bool operator () (ol::events::Event const &evt) override
+        virtual bool operator () (ol::events::Event &evt) override
         { 
             return true; 
         };

@@ -18,37 +18,42 @@ namespace ol {
 // */
 //const Disposable = function() {};
 
-class OLQT_EXPORT Disposable {
-public:
-    Disposable() {}
-    virtual ~Disposable() {}
+class OLQT_EXPORT Disposable 
+{
+private:
+    /**
+    * The object has already been disposed.
+    * @type {boolean}
+    * @private
+    */
+    bool disposed_;
 
-    virtual void dispose() {}
+public:
+    Disposable() : disposed_(false) {}
+    virtual ~Disposable();
+
+    /**
+     * Clean up.
+     */
+    void virtual dispose() 
+    {
+        if (!disposed_) 
+        {
+            disposed_ = true;
+            disposeInternal();
+        }
+    }
+
+    /**
+     * Extension point for disposable objects.
+     * @protected
+     */
+protected:
+    void virtual disposeInternal()
+    {
+    }
 };
 
-//
-///**
-// * The object has already been disposed.
-// * @type {boolean}
-// * @private
-// */
-//Disposable.prototype.disposed_ = false;
-//
-///**
-// * Clean up.
-// */
-//Disposable.prototype.dispose = function() {
-//  if (!this.disposed_) {
-//    this.disposed_ = true;
-//    this.disposeInternal();
-//  }
-//};
-//
-///**
-// * Extension point for disposable objects.
-// * @protected
-// */
-//Disposable.prototype.disposeInternal = UNDEFINED;
 //export default Disposable;
 }
 #endif // OL_DISPOSABLE

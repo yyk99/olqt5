@@ -10,6 +10,8 @@
 namespace ol {
 namespace events {
 
+class EventTarget;
+
 /**
  * @classdesc
  * Stripped down implementation of the W3C DOM Level 2 Event interface.
@@ -28,7 +30,7 @@ class OLQT_EXPORT Event
 {
 public:
     EventType::_type type;
-    void *target;
+    EventTarget *target;
     bool propagationStopped;
 
     Event(EventType::_type type) 
@@ -64,7 +66,10 @@ public:
      * @function
      * @api
      */
-    virtual void preventDefault() {}
+    virtual void preventDefault() 
+    {
+        stopPropagation();
+    }
     
       /**
        * Stop event propagation.
@@ -91,6 +96,14 @@ public:
     static void preventDefault(Event *evt) 
     {
       evt->preventDefault();
+    }
+
+    bool operator == (Event const &other) const {
+        return type == other.type && target == other.target;
+    }
+
+    bool operator != (Event const &other) const {
+        return !operator == (other);
     }
 };
 

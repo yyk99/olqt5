@@ -1,6 +1,10 @@
 #ifndef OL_EVENTS_EVENTTARGTE_H
 #define OL_EVENTS_EVENTTARGTE_H
 
+#include <vector>
+#include <string>
+#include <map>
+
 ///**
 // * @module ol/events/EventTarget
 // */
@@ -8,9 +12,13 @@
 //import Disposable from '../Disposable.js';
 #include "../Disposable.h"
 //import {unlistenAll} from '../events.js';
+#include "../events.h"
 //import {UNDEFINED} from '../functions.js';
 //import Event from '../events/Event.js';
+#include "../events/Event.h"
+#include "../jsport.h"
 
+#include "../dll_export.h"
 
 /**
  * @typedef {EventTarget|module:ol/events/EventTarget} EventTargetLike
@@ -37,141 +45,120 @@ namespace events {
  * @constructor
  * @extends {module:ol/Disposable}
  */
-class OLQT_EXPORT EventTarget : public ol::Disposable {
+class OLQT_EXPORT EventTarget : public ol::Disposable 
+{
+public: /* for testing and debugging */
+    std::map<std::string, std::vector<ol::events::ListenerF> > listeners_;
+    static std::vector<ol::events::ListenerF> Empty;
+    std::map<std::string, int> pendingRemovals_;
+    std::map<std::string, int> dispatching_;
+public:
     //const EventTarget = function() {
-    //
-    //  Disposable.call(this);
-    //
-    //  /**
-    //   * @private
-    //   * @type {!Object.<string, number>}
-    //   */
-    //  this.pendingRemovals_ = {};
-    //
-    //  /**
-    //   * @private
-    //   * @type {!Object.<string, number>}
-    //   */
-    //  this.dispatching_ = {};
-    //
-    //  /**
-    //   * @private
-    //   * @type {!Object.<string, Array.<module:ol/events~ListenerFunction>>}
-    //   */
-    //  this.listeners_ = {};
-    //
-    //};
+    EventTarget() 
+    {
+        //
+        //  Disposable.call(this);
+        //
+        //  /**
+        //   * @private
+        //   * @type {!Object.<string, number>}
+        //   */
+        //  this.pendingRemovals_ = {};
+        //
+        //  /**
+        //   * @private
+        //   * @type {!Object.<string, number>}
+        //   */
+        //  this.dispatching_ = {};
+        //
+        //  /**
+        //   * @private
+        //   * @type {!Object.<string, Array.<module:ol/events~ListenerFunction>>}
+        //   */
+        //  this.listeners_ = {};
+        //
+    }
+
+    virtual ~EventTarget() {}
     //
     //inherits(EventTarget, Disposable);
-    //
-    //
-    ///**
-    // * @param {string} type Type.
-    // * @param {module:ol/events~ListenerFunction} listener Listener.
-    // */
-    //EventTarget.prototype.addEventListener = function(type, listener) {
-    //  let listeners = this.listeners_[type];
-    //  if (!listeners) {
-    //    listeners = this.listeners_[type] = [];
-    //  }
-    //  if (listeners.indexOf(listener) === -1) {
-    //    listeners.push(listener);
-    //  }
-    //};
-    //
-    //
-    ///**
-    // * @param {{type: string,
-    // *     target: (EventTarget|module:ol/events/EventTarget|undefined)}|module:ol/events/Event|
-    // *     string} event Event or event type.
-    // * @return {boolean|undefined} `false` if anyone called preventDefault on the
-    // *     event object or if any of the listeners returned false.
-    // */
-    //EventTarget.prototype.dispatchEvent = function(event) {
-    //  const evt = typeof event === 'string' ? new Event(event) : event;
-    //  const type = evt.type;
-    //  evt.target = this;
-    //  const listeners = this.listeners_[type];
-    //  let propagate;
-    //  if (listeners) {
-    //    if (!(type in this.dispatching_)) {
-    //      this.dispatching_[type] = 0;
-    //      this.pendingRemovals_[type] = 0;
-    //    }
-    //    ++this.dispatching_[type];
-    //    for (let i = 0, ii = listeners.length; i < ii; ++i) {
-    //      if (listeners[i].call(this, evt) === false || evt.propagationStopped) {
-    //        propagate = false;
-    //        break;
-    //      }
-    //    }
-    //    --this.dispatching_[type];
-    //    if (this.dispatching_[type] === 0) {
-    //      let pendingRemovals = this.pendingRemovals_[type];
-    //      delete this.pendingRemovals_[type];
-    //      while (pendingRemovals--) {
-    //        this.removeEventListener(type, UNDEFINED);
-    //      }
-    //      delete this.dispatching_[type];
-    //    }
-    //    return propagate;
-    //  }
-    //};
-    //
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //EventTarget.prototype.disposeInternal = function() {
-    //  unlistenAll(this);
-    //};
-    //
-    //
-    ///**
-    // * Get the listeners for a specified event type. Listeners are returned in the
-    // * order that they will be called in.
-    // *
-    // * @param {string} type Type.
-    // * @return {Array.<module:ol/events~ListenerFunction>} Listeners.
-    // */
-    //EventTarget.prototype.getListeners = function(type) {
-    //  return this.listeners_[type];
-    //};
-    //
-    //
-    ///**
-    // * @param {string=} opt_type Type. If not provided,
-    // *     `true` will be returned if this EventTarget has any listeners.
-    // * @return {boolean} Has listeners.
-    // */
-    //EventTarget.prototype.hasListener = function(opt_type) {
-    //  return opt_type ?
-    //    opt_type in this.listeners_ :
-    //    Object.keys(this.listeners_).length > 0;
-    //};
-    //
-    //
-    ///**
-    // * @param {string} type Type.
-    // * @param {module:ol/events~ListenerFunction} listener Listener.
-    // */
-    //EventTarget.prototype.removeEventListener = function(type, listener) {
-    //  const listeners = this.listeners_[type];
-    //  if (listeners) {
-    //    const index = listeners.indexOf(listener);
-    //    if (type in this.pendingRemovals_) {
-    //      // make listener a no-op, and remove later in #dispatchEvent()
-    //      listeners[index] = UNDEFINED;
-    //      ++this.pendingRemovals_[type];
-    //    } else {
-    //      listeners.splice(index, 1);
-    //      if (listeners.length === 0) {
-    //        delete this.listeners_[type];
-    //      }
-    //    }
-    //  }
-    //};
+    
+    
+    /**
+     * @param {string} type Type.
+     * @param {module:ol/events~ListenerFunction} listener Listener.
+     */
+    void addEventListener(std::string const &type, ol::events::ListenerF listener)
+    {
+        auto &listeners = listeners_[type];
+        //if (listeners.indexOf(listener) === -1) {
+        //  listeners.push(listener);
+        //}
+        listeners.push_back(listener); // TODO: check for duplication
+    }
+    
+    /**
+     * @param {{type: string,
+     *     target: (EventTarget|module:ol/events/EventTarget|undefined)}|module:ol/events/Event|
+     *     string} event Event or event type.
+     * @return {boolean|undefined} `false` if anyone called preventDefault on the
+     *     event object or if any of the listeners returned false.
+     */
+    virtual bool dispatchEvent(std::string const &s)
+    {
+        return dispatchEvent(ol::events::Event(s));
+    }
+
+    virtual bool dispatchEvent(ol::events::Event evt);
+    
+    
+    /**
+     * @inheritDoc
+     */
+    virtual void disposeInternal()
+    {
+        unlistenAll(this);
+    }
+    
+    
+    /**
+     * Get the listeners for a specified event type. Listeners are returned in the
+     * order that they will be called in.
+     *
+     * @param {string} type Type.
+     * @return {Array.<module:ol/events~ListenerFunction>} Listeners.
+     */
+    std::vector<ol::events::ListenerF> const &getListeners(std::string const &type) const
+    {
+        if (listeners_.count(type) == 0)
+            return Empty;
+        return listeners_.at(type);
+    }
+    
+    
+    /**
+     * @param {string=} opt_type Type. If not provided,
+     *     `true` will be returned if this EventTarget has any listeners.
+     * @return {boolean} Has listeners.
+     */
+
+    bool hasListener (std::string const &opt_type) const 
+    {
+        return listeners_.count(opt_type) > 0;
+    };
+    
+    bool hasListener() const
+    {
+        return listeners_.size() > 0;
+    }
+
+    /**
+     * @param {string} type Type.
+     * @param {module:ol/events~ListenerFunction} listener Listener.
+     */
+    void removeEventListener(std::string const &type, ol::events::ListenerF listener);
 };
+
 //export default EventTarget;
 } // events
 } // ol
