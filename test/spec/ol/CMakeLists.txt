@@ -40,5 +40,9 @@ add_ol_test(tilerange)
 add_ol_test(size)
 add_ol_test(object)
 
+# event dir
+add_ol_test(events/event)
 add_ol_test(events/eventtarget)
+
+
 # end of file
