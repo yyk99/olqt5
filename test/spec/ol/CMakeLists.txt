@@ -44,5 +44,7 @@ add_ol_test(object)
 add_ol_test(events/event)
 add_ol_test(events/eventtarget)
 
+# tilegrid dir
+add_ol_test(tilegrid/tilegrid)
 
 # end of file

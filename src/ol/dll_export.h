@@ -1,6 +1,9 @@
 //
 //
 //
+#ifndef OL_DLL_EXPORT_H
+#define OL_DLL_EXPORT_H
+
 #pragma warning ( disable : 4251 )
 
 #ifndef _WIN32
@@ -15,3 +18,4 @@
 #   endif
 #endif
 
+#endif // OL_DLL_EXPORT_H

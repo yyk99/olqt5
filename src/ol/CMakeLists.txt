@@ -216,6 +216,7 @@ set(OLQT_SRC
     ./pointer/PointerEventHandler.h
     ./pointer/TouchSource.h
     ./proj.h
+    ./proj/epsg3857.cpp
     ./proj/epsg3857.h
     ./proj/epsg4326.h
     ./proj/proj4.h
@@ -349,8 +350,10 @@ set(OLQT_SRC
     ./TileCache.cpp
     ./TileCache.h
     ./tilecoord.h
+    ./tilegrid.cpp
     ./tilegrid.h
     ./tilegrid/common.h
+    ./tilegrid/TileGrid.cpp
     ./tilegrid/TileGrid.h
     ./tilegrid/WMTS.h
     ./TileQueue.h
