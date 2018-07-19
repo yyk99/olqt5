@@ -39,6 +39,7 @@ add_ol_test(vectortile)
 add_ol_test(tilerange)
 add_ol_test(size)
 add_ol_test(object)
+add_ol_test(array)
 
 # event dir
 add_ol_test(events/event)

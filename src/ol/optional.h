@@ -31,6 +31,10 @@ public:
         return first; 
     }
 
+    T const &value(T const &dflt) const {
+        return has_value() ? first : dflt;
+    }
+
     void reset () {
         first = T();
         second = false;

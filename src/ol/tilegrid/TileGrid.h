@@ -9,8 +9,10 @@
 // */
 //import {DEFAULT_TILE_SIZE} from './common.js';
 //import {assert} from '../asserts.js';
+#include "../asserts.h"
 //import TileRange, {createOrUpdate as createOrUpdateTileRange} from '../TileRange.js';
 //import {isSorted, linearFindNearest} from '../array.js';
+#include "../array.h"
 //import {createOrUpdate, getTopLeft} from '../extent.js';
 #include "../extent.h"
 //import {clamp} from '../math.js';
@@ -63,6 +65,8 @@ class OLQT_EXPORT TileGrid
 {
 private:
     ol::extent::Extent extent_;
+protected:
+    ol::number_t minZoom;
 public:
     struct Options 
     {
@@ -82,6 +86,7 @@ public:
         //   * @type {number}
         //   */
         //  this.minZoom = options.minZoom !== undefined ? options.minZoom : 0;
+        minZoom = options.minZoom.value(0);
         //
         //  /**
         //   * @private

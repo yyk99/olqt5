@@ -5,6 +5,7 @@
 # To make the list use:
 # /bin/find . -name \*.cpp -o -name \*.h | sort > all.txt
 set(OLQT_SRC
+    ./array.cpp
     ./array.h
     ./AssertionError.cpp
     ./AssertionError.h

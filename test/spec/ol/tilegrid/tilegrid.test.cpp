@@ -66,36 +66,64 @@ TEST_F(ol_tilegrid_TileGrid, create)
         opt.origin = origin;
         opt.tileSize = tileSize;
     }
-    auto tilegrid = TileGrid(opt);
+    EXPECT_NO_THROW(
+        auto tilegrid = TileGrid(opt)
+    );
 
     //    });
     //  });
 }
 
 //  describe('create with duplicate resolutions', function() {
-//    it('throws an exception', function() {
+TEST_F(ol_tilegrid_TileGrid, create2)
+{
+    return; // TODO: implement
+    //    it('throws an exception', function() {
 //      expect(function() {
-//        return new TileGrid({
-//          resolutions: [100, 50, 50, 25, 10],
-//          origin: origin,
-//          tileSize: tileSize
-//        });
-//      }).to.throwException();
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 50, 25, 10 };
+        opt.origin = origin;
+        opt.tileSize = tileSize;
+    }
+    EXPECT_THROW(
+        //        return new TileGrid({
+        //          resolutions: [100, 50, 50, 25, 10],
+        //          origin: origin,
+        //          tileSize: tileSize
+        //        });
+        //      }).to.throwException();
+        auto tilegrid = TileGrid(opt),
+        std::exception
+    );
 //    });
 //  });
-//
+}
 //  describe('create with out of order resolutions', function() {
-//    it('throws an exception', function() {
-//      const resolutions = [100, 25, 50, 10];
-//      expect(function() {
-//        return new TileGrid({
-//          resolutions: resolutions,
-//          origin: origin,
-//          tileSize: tileSize
-//        });
-//      }).to.throwException();
-//    });
-//  });
+TEST_F(ol_tilegrid_TileGrid, create3)
+{
+    return; // TODO: implement
+    //    it('throws an exception', function() {
+    //      const resolutions = [100, 25, 50, 10];
+    //      expect(function() {
+    //        return new TileGrid({
+    //          resolutions: resolutions,
+    //          origin: origin,
+    //          tileSize: tileSize
+    //        });
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 25, 50, 10 };
+        opt.origin = origin;
+        opt.tileSize = tileSize;
+    }
+    EXPECT_THROW(
+        auto tilegrid = TileGrid(opt),
+        std::exception
+    );
+    //      }).to.throwException();
+    //    });
+    //  });
+}
+
 //
 //  describe('create with multiple origins', function() {
 //    it('does not throw an exception', function() {
