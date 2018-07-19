@@ -1,9 +1,10 @@
 #ifndef OL_TILECOORD_H
 #define OL_TILECOORD_H
-///**
-// * @module ol/tilecoord
-// */
-//
+
+/**
+ * @module ol/tilecoord
+ */
+
 
 #include "jsport.h"
 
@@ -14,35 +15,37 @@
 
 namespace ol {
 namespace tilecoord {
-//
-///**
-// * An array of three numbers representing the location of a tile in a tile
-// * grid. The order is `z`, `x`, and `y`. `z` is the zoom level.
-// * @typedef {Array.<number>} TileCoord
-// * @api
-// */
+
+/**
+ * An array of three numbers representing the location of a tile in a tile
+ * grid. The order is `z`, `x`, and `y`. `z` is the zoom level.
+ * @typedef {Array.<number>} TileCoord
+ * @api
+ */
 
 typedef std::vector<ol::number_t> TileCoord;
 
-//
-///**
-// * @param {number} z Z.
-// * @param {number} x X.
-// * @param {number} y Y.
-// * @param {module:ol/tilecoord~TileCoord=} opt_tileCoord Tile coordinate.
-// * @return {module:ol/tilecoord~TileCoord} Tile coordinate.
-// */
-//export function createOrUpdate(z, x, y, opt_tileCoord) {
-//  if (opt_tileCoord !== undefined) {
-//    opt_tileCoord[0] = z;
-//    opt_tileCoord[1] = x;
-//    opt_tileCoord[2] = y;
-//    return opt_tileCoord;
-//  } else {
-//    return [z, x, y];
-//  }
-//}
 
+/**
+ * @param {number} z Z.
+ * @param {number} x X.
+ * @param {number} y Y.
+ * @param {module:ol/tilecoord~TileCoord=} opt_tileCoord Tile coordinate.
+ * @return {module:ol/tilecoord~TileCoord} Tile coordinate.
+ */
+inline TileCoord createOrUpdate(ol::number_t z, ol::number_t x, ol::number_t y) 
+{
+    return TileCoord({ z, x, y });
+}
+
+inline TileCoord &createOrUpdate(ol::number_t z, number_t x, number_t y, TileCoord &opt_tileCoord) 
+{
+    opt_tileCoord[0] = z;
+    opt_tileCoord[1] = x;
+    opt_tileCoord[2] = y;
+
+    return opt_tileCoord;
+}
 
 /**
  * @param {number} z Z.
@@ -50,8 +53,9 @@ typedef std::vector<ol::number_t> TileCoord;
  * @param {number} y Y.
  * @return {string} Key.
  */
-inline std::string getKeyZXY(ol::number_t z, ol::number_t x, ol::number_t y) {
-  return std::to_string(z) + '/' + std::to_string(x) + '/' + std::to_string(y);
+inline std::string getKeyZXY(ol::number_t z, ol::number_t x, ol::number_t y)
+{
+    return std::to_string(z) + '/' + std::to_string(x) + '/' + std::to_string(y);
 }
 
 /**
@@ -59,8 +63,9 @@ inline std::string getKeyZXY(ol::number_t z, ol::number_t x, ol::number_t y) {
  * @param {module:ol/tilecoord~TileCoord} tileCoord The tile coord.
  * @return {string} Key.
  */
-inline std::string getKey(TileCoord const &tileCoord) {
-  return getKeyZXY(tileCoord[0], tileCoord[1], tileCoord[2]);
+inline std::string getKey(TileCoord const &tileCoord)
+{
+    return getKeyZXY(tileCoord[0], tileCoord[1], tileCoord[2]);
 }
 
 

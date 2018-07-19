@@ -11,16 +11,19 @@
 //import {containsCoordinate, createOrUpdate, getCorner, getHeight, getWidth} from './extent.js';
 #include "extent.h"
 //import Corner from './extent/Corner.js';
+#include "./extent/Corner.h"
 //import {assign} from './obj.js';
 #include "obj.h"
 //import {get as getProjection, METERS_PER_UNIT} from './proj.js';
 #include "proj.h"
 //import Units from './proj/Units.js';
+#include "proj/Units.h"
 //import TileGrid from './tilegrid/TileGrid.js';
 #include "tilegrid/TileGrid.h"
 //
 
 namespace ol {
+namespace tilegrid {
 
 ///**
 // * @param {module:ol/proj/Projection} projection Projection.
@@ -56,43 +59,32 @@ namespace ol {
 //    return tileCoord;
 //  }
 //}
-//
-//
-///**
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @param {number=} opt_maxZoom Maximum zoom level (default is
-// *     DEFAULT_MAX_ZOOM).
-// * @param {number|module:ol/size~Size=} opt_tileSize Tile size (default uses
-// *     DEFAULT_TILE_SIZE).
-// * @param {module:ol/extent/Corner=} opt_corner Extent corner (default is `'top-left'`).
-// * @return {!module:ol/tilegrid/TileGrid} TileGrid instance.
-// */
-//export function createForExtent(extent, opt_maxZoom, opt_tileSize, opt_corner) {
-//  const corner = opt_corner !== undefined ? opt_corner : Corner.TOP_LEFT;
-//
-//  const resolutions = resolutionsFromExtent(extent, opt_maxZoom, opt_tileSize);
-//
-//  return new TileGrid({
-//    extent: extent,
-//    origin: getCorner(extent, corner),
-//    resolutions: resolutions,
-//    tileSize: opt_tileSize
-//  });
-//}
-//
-//
-///**
-// * @typedef {Object} XYZOptions
-// * @property {module:ol/extent~Extent} [extent] Extent for the tile grid. The origin for an XYZ tile grid is the
-// * top-left corner of the extent. The zero level of the grid is defined by the resolution at which one tile fits in the
-// * provided extent. If not provided, the extent of the EPSG:3857 projection is used.
-// * @property {number} [maxZoom] Maximum zoom. The default is `42`. This determines the number of levels
-// * in the grid set. For example, a `maxZoom` of 21 means there are 22 levels in the grid set.
-// * @property {number} [minZoom=0] Minimum zoom.
-// * @property {number|module:ol/size~Size} [tileSize=[256, 256]] Tile size in pixels.
-// */
-//
-//
+
+
+/**
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @param {number=} opt_maxZoom Maximum zoom level (default is
+ *     DEFAULT_MAX_ZOOM).
+ * @param {number|module:ol/size~Size=} opt_tileSize Tile size (default uses
+ *     DEFAULT_TILE_SIZE).
+ * @param {module:ol/extent/Corner=} opt_corner Extent corner (default is `'top-left'`).
+ * @return {!module:ol/tilegrid/TileGrid} TileGrid instance.
+ */
+TileGrid createForExtent(ol::extent::Extent const &extent, int opt_maxZoom = DEFAULT_MAX_ZOOM,
+    number_t opt_tileSize = DEFAULT_TILE_SIZE, std::string opt_corner = "top-left");
+
+/**
+ * @typedef {Object} XYZOptions
+ * @property {module:ol/extent~Extent} [extent] Extent for the tile grid. The origin for an XYZ tile grid is the
+ * top-left corner of the extent. The zero level of the grid is defined by the resolution at which one tile fits in the
+ * provided extent. If not provided, the extent of the EPSG:3857 projection is used.
+ * @property {number} [maxZoom] Maximum zoom. The default is `42`. This determines the number of levels
+ * in the grid set. For example, a `maxZoom` of 21 means there are 22 levels in the grid set.
+ * @property {number} [minZoom=0] Minimum zoom.
+ * @property {number|module:ol/size~Size} [tileSize=[256, 256]] Tile size in pixels.
+ */
+
+
 ///**
 // * Creates a tile grid with a standard XYZ tiling scheme.
 // * @param {module:ol/tilegrid~XYZOptions=} opt_options Tile grid options.
@@ -112,67 +104,65 @@ namespace ol {
 //
 //  return new TileGrid(options);
 //}
-//
-//
-///**
-// * Create a resolutions array from an extent.  A zoom factor of 2 is assumed.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @param {number=} opt_maxZoom Maximum zoom level (default is
-// *     DEFAULT_MAX_ZOOM).
-// * @param {number|module:ol/size~Size=} opt_tileSize Tile size (default uses
-// *     DEFAULT_TILE_SIZE).
-// * @return {!Array.<number>} Resolutions array.
-// */
-//function resolutionsFromExtent(extent, opt_maxZoom, opt_tileSize) {
-//  const maxZoom = opt_maxZoom !== undefined ?
-//    opt_maxZoom : DEFAULT_MAX_ZOOM;
-//
-//  const height = getHeight(extent);
-//  const width = getWidth(extent);
-//
-//  const tileSize = toSize(opt_tileSize !== undefined ?
-//    opt_tileSize : DEFAULT_TILE_SIZE);
-//  const maxResolution = Math.max(
-//    width / tileSize[0], height / tileSize[1]);
-//
-//  const length = maxZoom + 1;
-//  const resolutions = new Array(length);
-//  for (let z = 0; z < length; ++z) {
-//    resolutions[z] = maxResolution / Math.pow(2, z);
-//  }
-//  return resolutions;
-//}
-//
-//
-///**
-// * @param {module:ol/proj~ProjectionLike} projection Projection.
-// * @param {number=} opt_maxZoom Maximum zoom level (default is
-// *     DEFAULT_MAX_ZOOM).
-// * @param {number|module:ol/size~Size=} opt_tileSize Tile size (default uses
-// *     DEFAULT_TILE_SIZE).
-// * @param {module:ol/extent/Corner=} opt_corner Extent corner (default is `'top-left'`).
-// * @return {!module:ol/tilegrid/TileGrid} TileGrid instance.
-// */
-//export function createForProjection(projection, opt_maxZoom, opt_tileSize, opt_corner) {
-//  const extent = extentFromProjection(projection);
-//  return createForExtent(extent, opt_maxZoom, opt_tileSize, opt_corner);
-//}
-//
-//
-///**
-// * Generate a tile grid extent from a projection.  If the projection has an
-// * extent, it is used.  If not, a global extent is assumed.
-// * @param {module:ol/proj~ProjectionLike} projection Projection.
-// * @return {module:ol/extent~Extent} Extent.
-// */
-//export function extentFromProjection(projection) {
-//  projection = getProjection(projection);
-//  let extent = projection.getExtent();
-//  if (!extent) {
-//    const half = 180 * METERS_PER_UNIT[Units.DEGREES] / projection.getMetersPerUnit();
-//    extent = createOrUpdate(-half, -half, half, half);
-//  }
-//  return extent;
-//}
+
+
+/**
+ * Create a resolutions array from an extent.  A zoom factor of 2 is assumed.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @param {number=} opt_maxZoom Maximum zoom level (default is
+ *     DEFAULT_MAX_ZOOM).
+ * @param {number|module:ol/size~Size=} opt_tileSize Tile size (default uses
+ *     DEFAULT_TILE_SIZE).
+ * @return {!Array.<number>} Resolutions array.
+ */
+std::vector<number_t> resolutionsFromExtent(ol::extent::Extent const &extent, int opt_maxZoom = DEFAULT_MAX_ZOOM,
+    number_t opt_tileSize = DEFAULT_TILE_SIZE)
+{
+    auto height = ol::extent::getHeight(extent);
+    auto width = ol::extent::getWidth(extent);
+
+    auto tileSize = ol::size::toSize(opt_tileSize);
+
+    auto maxResolution = std::max(width / tileSize[0], height / tileSize[1]);
+
+    auto length = opt_maxZoom + 1;
+    auto resolutions = std::vector<number_t>(length);
+    for (int z = 0; z < length; ++z) {
+        resolutions[z] = maxResolution / std::pow(2, z);
+    }
+    return resolutions;
+}
+
+
+/**
+ * @param {module:ol/proj~ProjectionLike} projection Projection.
+ * @param {number=} opt_maxZoom Maximum zoom level (default is
+ *     DEFAULT_MAX_ZOOM).
+ * @param {number|module:ol/size~Size=} opt_tileSize Tile size (default uses
+ *     DEFAULT_TILE_SIZE).
+ * @param {module:ol/extent/Corner=} opt_corner Extent corner (default is `'top-left'`).
+ * @return {!module:ol/tilegrid/TileGrid} TileGrid instance.
+ */
+ol::tilegrid::TileGrid createForProjection(ol::proj::ProjectionLike projection, int opt_maxZoom = DEFAULT_MAX_ZOOM, 
+    int opt_tileSize = DEFAULT_TILE_SIZE, std::string const &opt_corner = ol::extent::Corner::TOP_LEFT /*"top-left"*/);
+
+/**
+ * Generate a tile grid extent from a projection.  If the projection has an
+ * extent, it is used.  If not, a global extent is assumed.
+ * @param {module:ol/proj~ProjectionLike} projection Projection.
+ * @return {module:ol/extent~Extent} Extent.
+ */
+ol::extent::Extent extentFromProjection(ol::proj::ProjectionLike prj) 
+{
+  auto projection = ol::proj::get(prj);
+  auto extent = projection->getExtent();
+  if (!extent.size())
+  {
+      ol::number_t half = 180 * ol::proj::METERS_PER_UNIT[ol::proj::Units::DEGREES] / projection->getMetersPerUnit();
+      extent = ol::extent::createOrUpdate(-half, -half, half, half);
+  }
+  return extent;
+}
+}
 }
 #endif // OL_TILEGRID_H

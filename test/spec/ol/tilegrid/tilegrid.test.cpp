@@ -77,7 +77,6 @@ TEST_F(ol_tilegrid_TileGrid, create)
 //  describe('create with duplicate resolutions', function() {
 TEST_F(ol_tilegrid_TileGrid, create2)
 {
-    return; // TODO: implement
     //    it('throws an exception', function() {
 //      expect(function() {
     TileGrid::Options opt; {
@@ -93,7 +92,7 @@ TEST_F(ol_tilegrid_TileGrid, create2)
         //        });
         //      }).to.throwException();
         auto tilegrid = TileGrid(opt),
-        std::exception
+        ol::AssertionError
     );
 //    });
 //  });
@@ -101,7 +100,6 @@ TEST_F(ol_tilegrid_TileGrid, create2)
 //  describe('create with out of order resolutions', function() {
 TEST_F(ol_tilegrid_TileGrid, create3)
 {
-    return; // TODO: implement
     //    it('throws an exception', function() {
     //      const resolutions = [100, 25, 50, 10];
     //      expect(function() {
@@ -117,7 +115,7 @@ TEST_F(ol_tilegrid_TileGrid, create3)
     }
     EXPECT_THROW(
         auto tilegrid = TileGrid(opt),
-        std::exception
+        ol::AssertionError
     );
     //      }).to.throwException();
     //    });
@@ -126,43 +124,78 @@ TEST_F(ol_tilegrid_TileGrid, create3)
 
 //
 //  describe('create with multiple origins', function() {
-//    it('does not throw an exception', function() {
-//      expect(function() {
-//        return new TileGrid({
-//          resolutions: [100, 50, 25, 10],
-//          origins: [origin, origin, origin, origin],
-//          tileSize: tileSize
-//        });
-//      }).not.to.throwException();
-//    });
-//  });
+TEST_F(ol_tilegrid_TileGrid, create4)
+{
+    //    it('does not throw an exception', function() {
+    //      expect(function() {
+    //        return new TileGrid({
+    //          resolutions: [100, 50, 25, 10],
+    //          origins: [origin, origin, origin, origin],
+    //          tileSize: tileSize
+    //        });
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 25, 10 };
+        opt.origins = { origin, origin, origin, origin };
+        opt.tileSize = tileSize;
+    };
+    //      }).not.to.throwException();
+    EXPECT_NO_THROW(auto tilegrid = TileGrid(opt));
+    //    });
+    //  });
+}
 //
 //  describe('create with both origin and multiple origins', function() {
-//    it('throws an exception', function() {
-//      expect(function() {
-//        return new TileGrid({
-//          resolutions: [100, 50, 25, 10],
-//          origins: [origin, origin, origin, origin],
-//          origin: origin,
-//          tileSize: tileSize
-//        });
-//      }).to.throwException();
-//    });
-//  });
-//
+TEST_F(ol_tilegrid_TileGrid, create5)
+{
+    //    it('throws an exception', function() {
+    //      expect(function() {
+    //        return new TileGrid({
+    //          resolutions: [100, 50, 25, 10],
+    //          origins: [origin, origin, origin, origin],
+    //          origin: origin,
+    //          tileSize: tileSize
+    //        });
+    //      }).to.throwException();
+    //    });
+    //  });
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 25, 10 };
+        opt.origins = { origin, origin, origin, origin };
+        opt.origin = origin;
+        opt.tileSize = tileSize;
+    };
+    EXPECT_THROW(
+        auto tilegrid = TileGrid(opt),
+        ol::AssertionError
+    );
+}
+
 //  describe('create with too few origins', function() {
-//    it('throws an exception', function() {
-//      expect(function() {
-//        return new TileGrid({
-//          resolutions: [100, 50, 25, 10],
-//          origins: [origin, origin, origin],
-//          tileSize: tileSize
-//        });
-//      }).to.throwException();
-//    });
-//  });
-//
+TEST_F(ol_tilegrid_TileGrid, create6)
+{
+    //    it('throws an exception', function() {
+    //      expect(function() {
+    //        return new TileGrid({
+    //          resolutions: [100, 50, 25, 10],
+    //          origins: [origin, origin, origin],
+    //          tileSize: tileSize
+    //        });
+    //      }).to.throwException();
+    //    });
+    //  });
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 25, 10 };
+        opt.origins = { origin, origin, origin };
+        opt.tileSize = tileSize;
+    };
+    EXPECT_THROW(
+        auto tilegrid = TileGrid(opt),
+        ol::AssertionError
+    );
+}
 //  describe('create with too many origins', function() {
+TEST_F(ol_tilegrid_TileGrid, create7)
+{
 //    it('throws an exception', function() {
 //      expect(function() {
 //        return new TileGrid({
@@ -173,7 +206,19 @@ TEST_F(ol_tilegrid_TileGrid, create3)
 //      }).to.throwException();
 //    });
 //  });
-//
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 25, 10 };
+        opt.origins = { origin, origin, origin, origin, origin };
+        opt.tileSize = tileSize;
+    };
+    EXPECT_THROW(
+        auto tilegrid = TileGrid(opt),
+        ol::AssertionError
+    );
+}
+
+TEST_F(ol_tilegrid_TileGrid, create8)
+{
 //  describe('create with multiple tileSizes', function() {
 //    it('does not throw an exception', function() {
 //      expect(function() {
@@ -185,7 +230,18 @@ TEST_F(ol_tilegrid_TileGrid, create3)
 //      }).not.to.throwException();
 //    });
 //  });
-//
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 25, 10 };
+        opt.origins = { origin, origin, origin, origin };
+        opt.tileSizes = { tileSize, tileSize, tileSize, tileSize };
+    };
+    EXPECT_NO_THROW(
+        auto tilegrid = TileGrid(opt)
+    );
+}
+
+TEST_F(ol_tilegrid_TileGrid, create9)
+{
 //  describe('create with both tileSize and multiple tileSizes', function() {
 //    it('throws an exception', function() {
 //      expect(function() {
@@ -198,21 +254,46 @@ TEST_F(ol_tilegrid_TileGrid, create3)
 //      }).to.throwException();
 //    });
 //  });
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 25, 10 };
+        opt.tileSizes = { tileSize, tileSize, tileSize, tileSize };
+        opt.tileSize = tileSize;
+        opt.origin = origin;
+    };
+    EXPECT_THROW(
+        auto tilegrid = TileGrid(opt),
+        ol::AssertionError
+    );
+}
+
 //
 //  describe('create with too few tileSizes', function() {
-//    it('throws an exception', function() {
-//      expect(function() {
-//        return new TileGrid({
-//          resolutions: [100, 50, 25, 10],
-//          tileSizes: [tileSize, tileSize, tileSize],
-//          origin: origin
-//        });
-//      }).to.throwException();
-//    });
-//  });
-//
+TEST_F(ol_tilegrid_TileGrid, create10)
+{
+    //    it('throws an exception', function() {
+    //      expect(function() {
+    //        return new TileGrid({
+    //          resolutions: [100, 50, 25, 10],
+    //          tileSizes: [tileSize, tileSize, tileSize],
+    //          origin: origin
+    //        });
+    //      }).to.throwException();
+    //    });
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 25, 10 };
+        opt.tileSizes = { tileSize, tileSize, tileSize };
+        opt.origin = origin;
+    };
+    EXPECT_THROW(
+        auto tilegrid = TileGrid(opt),
+        ol::AssertionError
+    );
+}
+
 //  describe('create with too many tileSizes', function() {
-//    it('throws an exception', function() {
+TEST_F(ol_tilegrid_TileGrid, create11)
+{
+    //    it('throws an exception', function() {
 //      expect(function() {
 //        return new TileGrid({
 //          resolutions: [100, 50, 25, 10],
@@ -222,8 +303,20 @@ TEST_F(ol_tilegrid_TileGrid, create3)
 //      }).to.throwException();
 //    });
 //  });
-//
+    TileGrid::Options opt; {
+        opt.resolutions = { 100, 50, 25, 10 };
+        opt.tileSizes = { tileSize, tileSize, tileSize, tileSize, tileSize };
+        opt.origin = origin;
+    };
+    EXPECT_THROW(
+        auto tilegrid = TileGrid(opt),
+        ol::AssertionError
+    );
+}
+
 //  describe('create with origin', function() {
+TEST_F(ol_tilegrid_TileGrid, create12)
+{
 //    let tileGrid;
 //    beforeEach(function() {
 //      tileGrid = new TileGrid({
@@ -232,258 +325,373 @@ TEST_F(ol_tilegrid_TileGrid, create3)
 //        resolutions: [1]
 //      });
 //    });
-//
+    TileGrid::Options opt; {
+        opt.resolutions = { 1 };
+        opt.tileSize = { 10, 10 };
+        opt.origin = { 10, 20 };
+    };
+    auto tileGrid = TileGrid(opt);
+
 //    it('returns the configured origin', function() {
 //      expect(tileGrid.getOrigin()).to.eql([10, 20]);
+    EXPECT_EQ(ol::coordinate::Coordinate({ 10, 20 }), tileGrid.getOrigin());
 //    });
 //
 //    it('returns null for an unknown extent', function() {
 //      expect(tileGrid.getExtent()).to.equal(null);
+    EXPECT_EQ(0, tileGrid.getExtent().size());
 //    });
 //
 //    it('returns null for an unknown full tile range', function() {
 //      expect(tileGrid.getFullTileRange(0)).to.equal(null);
+    EXPECT_EQ(0, tileGrid.getFullTileRange(0));
 //    });
 //  });
-//
+}
+
 //  describe('create with extent', function() {
-//    let tileGrid;
-//    beforeEach(function() {
-//      tileGrid = new TileGrid({
-//        extent: [10, 20, 30, 40],
-//        tileSize: 10,
-//        resolutions: [1]
-//      });
-//    });
-//
-//    it('assumes top left corner of extent as origin', function() {
-//      expect(tileGrid.getOrigin()).to.eql([10, 40]);
-//    });
-//
-//    it('calculates full tile ranges from extent', function() {
-//      const fullTileRange = tileGrid.getFullTileRange(0);
-//      expect(fullTileRange.minX).to.equal(0);
-//      expect(fullTileRange.maxX).to.equal(1);
-//      expect(fullTileRange.minY).to.equal(-2);
-//      expect(fullTileRange.maxY).to.equal(-1);
-//    });
-//  });
-//
+TEST_F(ol_tilegrid_TileGrid, create13)
+{
+    //    let tileGrid;
+    //    beforeEach(function() {
+    //      tileGrid = new TileGrid({
+    //        extent: [10, 20, 30, 40],
+    //        tileSize: 10,
+    //        resolutions: [1]
+    //      });
+    //    });
+
+    TileGrid::Options opt; {
+        opt.extent = { 10, 20, 30, 40 };
+        opt.tileSize = { 10, 10 };
+        opt.resolutions = { 1 };
+    };
+    auto tileGrid = TileGrid(opt);
+    //
+    //    it('assumes top left corner of extent as origin', function() {
+    //      expect(tileGrid.getOrigin()).to.eql([10, 40]);
+    EXPECT_EQ(ol::coordinate::Coordinate({ 10, 40 }), tileGrid.getOrigin());
+    //    });
+    //
+    //    it('calculates full tile ranges from extent', function() {
+    {
+        auto fullTileRange = *tileGrid.getFullTileRange(0);
+        //      expect(fullTileRange.minX).to.equal(0);
+        EXPECT_EQ(0, fullTileRange.minX);
+        //      expect(fullTileRange.maxX).to.equal(1);
+        EXPECT_EQ(1, fullTileRange.maxX);
+        //      expect(fullTileRange.minY).to.equal(-2);
+        EXPECT_EQ(-2, fullTileRange.minY);
+        //      expect(fullTileRange.maxY).to.equal(-1);
+        EXPECT_EQ(-1, fullTileRange.maxY);
+    }
+    //    });
+    //  });
+}
+
 //  describe('create with extent and sizes', function() {
-//    let tileGrid;
-//    beforeEach(function() {
-//      tileGrid = new TileGrid({
-//        extent: [10, 20, 30, 40],
-//        sizes: [[3, -3]],
-//        tileSize: 10,
-//        resolutions: [1]
-//      });
-//    });
-//
-//    it('returns the configured extent', function() {
-//      expect(tileGrid.getExtent()).to.eql([10, 20, 30, 40]);
-//    });
-//
-//    it('calculates full tile ranges from sizes', function() {
-//      const fullTileRange = tileGrid.getFullTileRange(0);
-//      expect(fullTileRange.minX).to.equal(0);
-//      expect(fullTileRange.maxX).to.equal(2);
-//      expect(fullTileRange.minY).to.equal(-3);
-//      expect(fullTileRange.maxY).to.equal(-1);
-//    });
-//  });
-//
+TEST_F(ol_tilegrid_TileGrid, create14)
+{
+    //    let tileGrid;
+    //    beforeEach(function() {
+    //      tileGrid = new TileGrid({
+    //        extent: [10, 20, 30, 40],
+    //        sizes: [[3, -3]],
+    //        tileSize: 10,
+    //        resolutions: [1]
+    //      });
+    //    });
+    TileGrid::Options opt; {
+        opt.extent = { 10, 20, 30, 40 };
+        opt.sizes = { {3, -3} };
+        opt.tileSize = { 10, 10 };
+        opt.resolutions = { 1 };
+    };
+    auto tileGrid = TileGrid(opt);
+    //
+    //    it('returns the configured extent', function() {
+    //      expect(tileGrid.getExtent()).to.eql([10, 20, 30, 40]);
+    EXPECT_EQ(ol::extent::Extent({ 10,20,30,40 }), tileGrid.getExtent());
+    //    });
+    //
+    //    it('calculates full tile ranges from sizes', function() {
+    {
+        //      const fullTileRange = tileGrid.getFullTileRange(0);
+        auto fullTileRange = *tileGrid.getFullTileRange(0);
+        //      expect(fullTileRange.minX).to.equal(0);
+        //      expect(fullTileRange.maxX).to.equal(2);
+        //      expect(fullTileRange.minY).to.equal(-3);
+        //      expect(fullTileRange.maxY).to.equal(-1);
+        EXPECT_EQ(0, fullTileRange.minX);
+        EXPECT_EQ(2, fullTileRange.maxX);
+        EXPECT_EQ(-3, fullTileRange.minY);
+        EXPECT_EQ(-1, fullTileRange.maxY);
+    }
+    //    });
+    //  });
+}
+
+
 //  describe('create with top-left origin and sizes', function() {
-//    let tileGrid;
-//    beforeEach(function() {
-//      tileGrid = new TileGrid({
-//        origin: [10, 40],
-//        sizes: [[3, -3]],
-//        tileSize: 10,
-//        resolutions: [1]
-//      });
-//    });
-//
-//    it('calculates correct minY and maxY for negative heights', function() {
-//      const fullTileRange = tileGrid.getFullTileRange(0);
-//      expect(fullTileRange.minY).to.equal(-3);
-//      expect(fullTileRange.maxY).to.equal(-1);
-//    });
-//  });
-//
-//  describe('create with bottom-left origin and sizes', function() {
-//    let tileGrid;
-//    beforeEach(function() {
-//      tileGrid = new TileGrid({
-//        origin: [10, 10],
-//        sizes: [[3, 3]],
-//        tileSize: 10,
-//        resolutions: [1]
-//      });
-//    });
-//
-//    it('calculates correct minX and maxX for positive heights', function() {
-//      const fullTileRange = tileGrid.getFullTileRange(0);
-//      expect(fullTileRange.minY).to.equal(0);
-//      expect(fullTileRange.maxY).to.equal(2);
-//    });
-//  });
-//
-//  describe('create with extent and origin', function() {
-//    it('uses both origin and extent', function() {
-//      const tileGrid = new TileGrid({
-//        origin: [0, 0],
-//        extent: [10, 20, 30, 40],
-//        tileSize: 10,
-//        resolutions: [1]
-//      });
-//      expect(tileGrid.getOrigin()).to.eql([0, 0]);
-//      expect(tileGrid.getExtent()).to.eql([10, 20, 30, 40]);
-//    });
-//  });
-//
-//  describe('createForExtent', function() {
-//    it('allows creation of tile grid from extent', function() {
-//      const extent = createOrUpdate(-100, -100, 100, 100);
-//      const grid = createForExtent(extent);
-//      expect(grid).to.be.a(TileGrid);
-//
-//      const resolutions = grid.getResolutions();
-//      expect(resolutions.length).to.be(DEFAULT_MAX_ZOOM + 1);
-//      expect(grid.getOrigin()).to.eql([-100, 100]);
-//    });
-//  });
-//
-//  describe('#zoomFactor_', function() {
-//    it('is set for a consistent zoom factor', function() {
-//      const grid = new TileGrid({
-//        resolutions: [10, 5, 2.5, 1.25],
-//        origin: origin,
-//        tileSize: tileSize
-//      });
-//      expect(grid.zoomFactor_).to.be(2);
-//    });
-//
-//    it('is not set for an inconsistent zoom factor', function() {
-//      const grid = new TileGrid({
-//        resolutions: [10, 5, 3, 1.25],
-//        origin: origin,
-//        tileSize: tileSize
-//      });
-//      expect(grid.zoomFactor_).to.be(undefined);
-//    });
-//  });
-//
-//  describe('createForProjection', function() {
-//
-//    it('allows easier creation of a tile grid', function() {
-//      const projection = getProjection('EPSG:3857');
-//      const grid = createForProjection(projection);
-//      expect(grid).to.be.a(TileGrid);
-//
-//      const resolutions = grid.getResolutions();
-//      expect(resolutions.length).to.be(DEFAULT_MAX_ZOOM + 1);
-//    });
-//
-//    it('accepts a number of zoom levels', function() {
-//      const projection = getProjection('EPSG:3857');
-//      const grid = createForProjection(projection, 18);
-//      expect(grid).to.be.a(TileGrid);
-//
-//      const resolutions = grid.getResolutions();
-//      expect(resolutions.length).to.be(19);
-//    });
-//
-//    it('accepts a big number of zoom levels', function() {
-//      const projection = getProjection('EPSG:3857');
-//      const grid = createForProjection(projection, 23);
-//      expect(grid).to.be.a(TileGrid);
-//
-//      const resolutions = grid.getResolutions();
-//      expect(resolutions.length).to.be(24);
-//    });
-//
-//    it('works for projections unknown to the client', function() {
-//      const projection = new Projection(
-//        {code: 'EPSG:31287', units: 'm'});
-//      const grid = createForProjection(projection);
-//      const resolutions = grid.getResolutions();
-//      expect(resolutions[5]).to.be(
-//        360 * METERS_PER_UNIT['degrees'] /
-//          DEFAULT_TILE_SIZE / Math.pow(2, 5));
-//    });
-//
-//    it('assumes origin is top-left', function() {
-//      const projection = getProjection('EPSG:3857');
-//      const grid = createForProjection(projection);
-//      const origin = grid.getOrigin();
-//      const half = HALF_SIZE;
-//      expect(origin).to.eql([-half, half]);
-//    });
-//
-//    it('accepts bottom-left as corner', function() {
-//      const projection = getProjection('EPSG:3857');
-//      const grid = createForProjection(
-//        projection, undefined, undefined, 'bottom-left');
-//      const origin = grid.getOrigin();
-//      const half = HALF_SIZE;
-//      expect(origin).to.eql([-half, -half]);
-//    });
-//
-//    it('accepts bottom-right as corner', function() {
-//      const projection = getProjection('EPSG:3857');
-//      const grid = createForProjection(
-//        projection, undefined, undefined, 'bottom-right');
-//      const origin = grid.getOrigin();
-//      const half = HALF_SIZE;
-//      expect(origin).to.eql([half, -half]);
-//    });
-//
-//    it('accepts top-left as corner', function() {
-//      const projection = getProjection('EPSG:3857');
-//      const grid = createForProjection(
-//        projection, undefined, undefined, 'top-left');
-//      const origin = grid.getOrigin();
-//      const half = HALF_SIZE;
-//      expect(origin).to.eql([-half, half]);
-//    });
-//
-//    it('accepts top-right as corner', function() {
-//      const projection = getProjection('EPSG:3857');
-//      const grid = createForProjection(
-//        projection, undefined, undefined, 'top-right');
-//      const origin = grid.getOrigin();
-//      const half = HALF_SIZE;
-//      expect(origin).to.eql([half, half]);
-//    });
-//
-//  });
-//
-//  describe('createXYZ()', function() {
-//
-//    it('uses defaults', function() {
-//      const tileGrid = createXYZ();
-//      expect(tileGrid.getExtent()).to.eql(
-//        getProjection('EPSG:3857').getExtent());
-//      expect(tileGrid.getMinZoom()).to.equal(0);
-//      expect(tileGrid.getMaxZoom()).to.equal(DEFAULT_MAX_ZOOM);
-//      expect(tileGrid.getTileSize()).to.equal(DEFAULT_TILE_SIZE);
-//    });
-//
-//    it('respects configuration options', function() {
-//      const tileGrid = createXYZ({
-//        extent: [10, 20, 30, 40],
-//        minZoom: 1,
-//        maxZoom: 2,
-//        tileSize: 128
-//      });
-//      expect(tileGrid.getExtent()).to.eql([10, 20, 30, 40]);
-//      expect(tileGrid.getMinZoom()).to.equal(1);
-//      expect(tileGrid.getMaxZoom()).to.equal(2);
-//      expect(tileGrid.getTileSize()).to.equal(128);
-//    });
-//
-//  });
+TEST_F(ol_tilegrid_TileGrid, create15)
+{
+    //    let tileGrid;
+    //    beforeEach(function() {
+    //      tileGrid = new TileGrid({
+    //        origin: [10, 40],
+    //        sizes: [[3, -3]],
+    //        tileSize: 10,
+    //        resolutions: [1]
+    //      });
+    //    });
+
+    TileGrid::Options opt; {
+        opt.origin = { 10, 40 };
+        opt.sizes = { { 3, -3 } };
+        opt.tileSize = { 10, 10 };
+        opt.resolutions = { 1 };
+    };
+    auto tileGrid = TileGrid(opt);
+    //
+    //    it('calculates correct minY and maxY for negative heights', function() {
+    auto fullTileRange = *tileGrid.getFullTileRange(0);
+    //      expect(fullTileRange.minY).to.equal(-3);
+    //      expect(fullTileRange.maxY).to.equal(-1);
+    EXPECT_EQ(-3, fullTileRange.minY);
+    EXPECT_EQ(-1, fullTileRange.maxY);
+    //    });
+    //  });
+}
+
+TEST_F(ol_tilegrid_TileGrid, create16)
+{
+    //  describe('create with bottom-left origin and sizes', function() {
+    //    let tileGrid;
+    //    beforeEach(function() {
+    //      tileGrid = new TileGrid({
+    //        origin: [10, 10],
+    //        sizes: [[3, 3]],
+    //        tileSize: 10,
+    //        resolutions: [1]
+    //      });
+    //    });
+    TileGrid::Options opt; {
+        opt.origin = { 10, 10 };
+        opt.sizes = { { 3, 3 } };
+        opt.tileSize = { 10, 10 };
+        opt.resolutions = { 1 };
+    };
+    auto tileGrid = TileGrid(opt);
+    //    it('calculates correct minX and maxX for positive heights', function() {
+    auto fullTileRange = *tileGrid.getFullTileRange(0);
+    //      expect(fullTileRange.minY).to.equal(0);
+    //      expect(fullTileRange.maxY).to.equal(2);
+    EXPECT_EQ(0, fullTileRange.minY);
+    EXPECT_EQ(2, fullTileRange.maxY);
+    //    });
+    //  });
+}
+
+TEST_F(ol_tilegrid_TileGrid, create17)
+{
+    //  describe('create with extent and origin', function() {
+    //    it('uses both origin and extent', function() {
+    //      const tileGrid = new TileGrid({
+    //        origin: [0, 0],
+    //        extent: [10, 20, 30, 40],
+    //        tileSize: 10,
+    //        resolutions: [1]
+    //      });
+    TileGrid::Options opt; {
+        opt.origin = { 0, 0 };
+        opt.extent = { 10, 20, 30, 40 };
+        opt.tileSize = { 10, 10 };
+        opt.resolutions = { 1 };
+    };
+    auto tileGrid = TileGrid(opt);
+    //      expect(tileGrid.getOrigin()).to.eql([0, 0]);
+    EXPECT_EQ(ol::coordinate::Coordinate({ 0, 0 }), tileGrid.getOrigin());
+    //      expect(tileGrid.getExtent()).to.eql([10, 20, 30, 40]);
+    EXPECT_EQ(ol::extent::Extent({ 10, 20, 30, 40 }), tileGrid.getExtent());
+    //    });
+    //  });
+}
+
+TEST_F(ol_tilegrid_TileGrid, createForExtent)
+{
+    //  describe('createForExtent', function() {
+    //    it('allows creation of tile grid from extent', function() {
+    //      const extent = createOrUpdate(-100, -100, 100, 100);
+    //      const grid = createForExtent(extent);
+    //      expect(grid).to.be.a(TileGrid);
+    //
+    //      const resolutions = grid.getResolutions();
+    //      expect(resolutions.length).to.be(DEFAULT_MAX_ZOOM + 1);
+    //      expect(grid.getOrigin()).to.eql([-100, 100]);
+    //    });
+    //  });
+    //
+}
+
+TEST_F(ol_tilegrid_TileGrid, zoomFactor_)
+{
+    //  describe('#zoomFactor_', function() {
+    //    it('is set for a consistent zoom factor', function() {
+    {
+        //      const grid = new TileGrid({
+        //        resolutions: [10, 5, 2.5, 1.25],
+        //        origin: origin,
+        //        tileSize: tileSize
+        //      });
+        TileGrid::Options opt; {
+            opt.resolutions = { 10, 5, 2.5, 1.25 };
+            opt.origin = origin;
+            opt.tileSize = tileSize;
+        }
+        auto grid = TileGrid(opt);
+        //      expect(grid.zoomFactor_).to.be(2);
+        EXPECT_EQ(2, grid.getZoomFactor().value());
+    }
+    //    });
+    //
+    //    it('is not set for an inconsistent zoom factor', function() {
+    {
+        //      const grid = new TileGrid({
+        //        resolutions: [10, 5, 3, 1.25],
+        //        origin: origin,
+        //        tileSize: tileSize
+        //      });
+        TileGrid::Options opt; {
+            opt.resolutions = { 10, 5, 3, 1.25 };
+            opt.origin = origin;
+            opt.tileSize = tileSize;
+        }
+        auto grid = TileGrid(opt);
+        //      expect(grid.zoomFactor_).to.be(undefined);
+        EXPECT_FALSE(grid.getZoomFactor().has_value());
+    }
+    //    });
+    //  });
+}
+
+TEST_F(ol_tilegrid_TileGrid, createForProjection)
+{
+    //  describe('createForProjection', function() {
+    //
+    //    it('allows easier creation of a tile grid', function() {
+    {
+        auto projection = ol::proj::get/*Projection*/("EPSG:3857");
+        //      const grid = createForProjection(projection);
+        //      expect(grid).to.be.a(TileGrid);
+        //
+        //      const resolutions = grid.getResolutions();
+        //      expect(resolutions.length).to.be(DEFAULT_MAX_ZOOM + 1);
+    }
+    //    });
+    //
+    //    it('accepts a number of zoom levels', function() {
+    //      const projection = getProjection('EPSG:3857');
+    //      const grid = createForProjection(projection, 18);
+    //      expect(grid).to.be.a(TileGrid);
+    //
+    //      const resolutions = grid.getResolutions();
+    //      expect(resolutions.length).to.be(19);
+    //    });
+    //
+    //    it('accepts a big number of zoom levels', function() {
+    //      const projection = getProjection('EPSG:3857');
+    //      const grid = createForProjection(projection, 23);
+    //      expect(grid).to.be.a(TileGrid);
+    //
+    //      const resolutions = grid.getResolutions();
+    //      expect(resolutions.length).to.be(24);
+    //    });
+    //
+    //    it('works for projections unknown to the client', function() {
+    //      const projection = new Projection(
+    //        {code: 'EPSG:31287', units: 'm'});
+    //      const grid = createForProjection(projection);
+    //      const resolutions = grid.getResolutions();
+    //      expect(resolutions[5]).to.be(
+    //        360 * METERS_PER_UNIT['degrees'] /
+    //          DEFAULT_TILE_SIZE / Math.pow(2, 5));
+    //    });
+    //
+    //    it('assumes origin is top-left', function() {
+    //      const projection = getProjection('EPSG:3857');
+    //      const grid = createForProjection(projection);
+    //      const origin = grid.getOrigin();
+    //      const half = HALF_SIZE;
+    //      expect(origin).to.eql([-half, half]);
+    //    });
+    //
+    //    it('accepts bottom-left as corner', function() {
+    //      const projection = getProjection('EPSG:3857');
+    //      const grid = createForProjection(
+    //        projection, undefined, undefined, 'bottom-left');
+    //      const origin = grid.getOrigin();
+    //      const half = HALF_SIZE;
+    //      expect(origin).to.eql([-half, -half]);
+    //    });
+    //
+    //    it('accepts bottom-right as corner', function() {
+    //      const projection = getProjection('EPSG:3857');
+    //      const grid = createForProjection(
+    //        projection, undefined, undefined, 'bottom-right');
+    //      const origin = grid.getOrigin();
+    //      const half = HALF_SIZE;
+    //      expect(origin).to.eql([half, -half]);
+    //    });
+    //
+    //    it('accepts top-left as corner', function() {
+    //      const projection = getProjection('EPSG:3857');
+    //      const grid = createForProjection(
+    //        projection, undefined, undefined, 'top-left');
+    //      const origin = grid.getOrigin();
+    //      const half = HALF_SIZE;
+    //      expect(origin).to.eql([-half, half]);
+    //    });
+    //
+    //    it('accepts top-right as corner', function() {
+    //      const projection = getProjection('EPSG:3857');
+    //      const grid = createForProjection(
+    //        projection, undefined, undefined, 'top-right');
+    //      const origin = grid.getOrigin();
+    //      const half = HALF_SIZE;
+    //      expect(origin).to.eql([half, half]);
+    //    });
+    //
+    //  });
+}
+
+TEST_F(ol_tilegrid_TileGrid, createXYZ)
+{
+    //  describe('createXYZ()', function() {
+    //
+    //    it('uses defaults', function() {
+    //      const tileGrid = createXYZ();
+    //      expect(tileGrid.getExtent()).to.eql(
+    //        getProjection('EPSG:3857').getExtent());
+    //      expect(tileGrid.getMinZoom()).to.equal(0);
+    //      expect(tileGrid.getMaxZoom()).to.equal(DEFAULT_MAX_ZOOM);
+    //      expect(tileGrid.getTileSize()).to.equal(DEFAULT_TILE_SIZE);
+    //    });
+    //
+    //    it('respects configuration options', function() {
+    //      const tileGrid = createXYZ({
+    //        extent: [10, 20, 30, 40],
+    //        minZoom: 1,
+    //        maxZoom: 2,
+    //        tileSize: 128
+    //      });
+    //      expect(tileGrid.getExtent()).to.eql([10, 20, 30, 40]);
+    //      expect(tileGrid.getMinZoom()).to.equal(1);
+    //      expect(tileGrid.getMaxZoom()).to.equal(2);
+    //      expect(tileGrid.getTileSize()).to.equal(128);
+    //    });
+    //
+    //  });
+}
 //
 //  describe('getForProjection', function() {
 //

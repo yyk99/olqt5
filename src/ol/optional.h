@@ -31,7 +31,7 @@ public:
         return first; 
     }
 
-    T const &value(T const &dflt) const {
+    T const &value_or(T const &dflt) const {
         return has_value() ? first : dflt;
     }
 

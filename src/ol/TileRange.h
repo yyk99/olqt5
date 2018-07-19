@@ -30,6 +30,9 @@ public:
     number_t minY;
     number_t maxY;
 
+    TileRange() : minX(), maxX(), minY(), maxY()
+    {}
+
     TileRange(number_t minX, number_t maxX, number_t minY, number_t maxY)
         : minX(minX), maxX(maxX), minY(minY), maxY(maxY)
     {

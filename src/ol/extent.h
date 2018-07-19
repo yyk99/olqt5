@@ -1,27 +1,39 @@
 #ifndef OL_EXTENT_H
 #define OL_EXTENT_H
-///**
-// * @module ol/extent
-// */
-//import {assert} from './asserts.js';
+
+/**
+ * @module ol/extent
+ */
+
+ //import {assert} from './asserts.js';
+#include "asserts.h"
 //import Corner from './extent/Corner.js';
+#include "extent/Corner.h"
 //import Relationship from './extent/Relationship.js';
 //
 //
 
 #include <vector>
 #include "jsport.h"
+#include "coordinate.h"
+#include "size.h"
+
+#include "dll_export.h"
 
 namespace ol {
 namespace extent {
 
-///**
-// * An array of numbers representing an extent: `[minx, miny, maxx, maxy]`.
-// * @typedef {Array.<number>} Extent
-// * @api
-// */
+/**
+ * An array of numbers representing an extent: `[minx, miny, maxx, maxy]`.
+ * @typedef {Array.<number>} Extent
+ * @api
+ */
 
 typedef std::vector<number_t> Extent;
+
+inline number_t getWidth(Extent const &extent);
+
+
 
 //
 ///**
@@ -213,28 +225,31 @@ typedef std::vector<number_t> Extent;
 //export function createEmpty() {
 //  return [Infinity, Infinity, -Infinity, -Infinity];
 //}
-//
-//
-///**
-// * Create a new extent or update the provided extent.
-// * @param {number} minX Minimum X.
-// * @param {number} minY Minimum Y.
-// * @param {number} maxX Maximum X.
-// * @param {number} maxY Maximum Y.
-// * @param {module:ol/extent~Extent=} opt_extent Destination extent.
-// * @return {module:ol/extent~Extent} Extent.
-// */
-//export function createOrUpdate(minX, minY, maxX, maxY, opt_extent) {
-//  if (opt_extent) {
-//    opt_extent[0] = minX;
-//    opt_extent[1] = minY;
-//    opt_extent[2] = maxX;
-//    opt_extent[3] = maxY;
-//    return opt_extent;
-//  } else {
-//    return [minX, minY, maxX, maxY];
-//  }
-//}
+
+/**
+ * Create a new extent or update the provided extent.
+ * @param {number} minX Minimum X.
+ * @param {number} minY Minimum Y.
+ * @param {number} maxX Maximum X.
+ * @param {number} maxY Maximum Y.
+ * @param {module:ol/extent~Extent=} opt_extent Destination extent.
+ * @return {module:ol/extent~Extent} Extent.
+ */
+inline Extent createOrUpdate(number_t minX, number_t minY, number_t maxX, number_t maxY) 
+{
+    return Extent({ minX, minY, maxX, maxY });
+}
+
+inline Extent &createOrUpdate(number_t minX, number_t minY, number_t maxX, number_t maxY, Extent &opt_extent) 
+{
+    opt_extent[0] = minX;
+    opt_extent[1] = minY;
+    opt_extent[2] = maxX;
+    opt_extent[3] = maxY;
+
+    return opt_extent;
+}
+
 //
 //
 ///**
@@ -452,30 +467,32 @@ typedef std::vector<number_t> Extent;
 //  }
 //  return area;
 //}
-//
-//
-///**
-// * Get the bottom left coordinate of an extent.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @return {module:ol/coordinate~Coordinate} Bottom left coordinate.
-// * @api
-// */
-//export function getBottomLeft(extent) {
-//  return [extent[0], extent[1]];
-//}
-//
-//
-///**
-// * Get the bottom right coordinate of an extent.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @return {module:ol/coordinate~Coordinate} Bottom right coordinate.
-// * @api
-// */
-//export function getBottomRight(extent) {
-//  return [extent[2], extent[1]];
-//}
-//
-//
+
+
+/**
+ * Get the bottom left coordinate of an extent.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @return {module:ol/coordinate~Coordinate} Bottom left coordinate.
+ * @api
+ */
+inline ol::coordinate::Coordinate getBottomLeft(Extent const &extent)
+{
+    return { extent[0], extent[1] };
+}
+
+
+/**
+ * Get the bottom right coordinate of an extent.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @return {module:ol/coordinate~Coordinate} Bottom right coordinate.
+ * @api
+ */
+inline ol::coordinate::Coordinate getBottomRight(Extent const &extent) 
+{
+    return { extent[2], extent[1] };
+}
+
+
 ///**
 // * Get the center coordinate of an extent.
 // * @param {module:ol/extent~Extent} extent Extent.
@@ -485,33 +502,17 @@ typedef std::vector<number_t> Extent;
 //export function getCenter(extent) {
 //  return [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2];
 //}
-//
-//
-///**
-// * Get a corner coordinate of an extent.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @param {module:ol/extent/Corner} corner Corner.
-// * @return {module:ol/coordinate~Coordinate} Corner coordinate.
-// */
-//export function getCorner(extent, corner) {
-//  let coordinate;
-//  if (corner === Corner.BOTTOM_LEFT) {
-//    coordinate = getBottomLeft(extent);
-//  } else if (corner === Corner.BOTTOM_RIGHT) {
-//    coordinate = getBottomRight(extent);
-//  } else if (corner === Corner.TOP_LEFT) {
-//    coordinate = getTopLeft(extent);
-//  } else if (corner === Corner.TOP_RIGHT) {
-//    coordinate = getTopRight(extent);
-//  } else {
-//    assert(false, 13); // Invalid corner
-//  }
-//  return (
-//    /** @type {!module:ol/coordinate~Coordinate} */ (coordinate)
-//  );
-//}
-//
-//
+
+
+/**
+ * Get a corner coordinate of an extent.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @param {module:ol/extent/Corner} corner Corner.
+ * @return {module:ol/coordinate~Coordinate} Corner coordinate.
+ */
+ol::coordinate::Coordinate OLQT_EXPORT getCorner(ol::extent::Extent const &extent, std::string const &corner);
+
+
 ///**
 // * @param {module:ol/extent~Extent} extent1 Extent 1.
 // * @param {module:ol/extent~Extent} extent2 Extent 2.
@@ -558,17 +559,18 @@ typedef std::vector<number_t> Extent;
 //    Math.max(x0, x1, x2, x3), Math.max(y0, y1, y2, y3),
 //    opt_extent);
 //}
-//
-//
-///**
-// * Get the height of an extent.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @return {number} Height.
-// * @api
-// */
-//export function getHeight(extent) {
-//  return extent[3] - extent[1];
-//}
+
+
+/**
+ * Get the height of an extent.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @return {number} Height.
+ * @api
+ */
+inline number_t getHeight(Extent const &extent)
+{
+    return extent[3] - extent[1];
+}
 //
 //
 ///**
@@ -618,61 +620,65 @@ typedef std::vector<number_t> Extent;
 //  }
 //  return intersection;
 //}
-//
-//
-///**
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @return {number} Margin.
-// */
-//export function getMargin(extent) {
-//  return getWidth(extent) + getHeight(extent);
-//}
-//
-//
-///**
-// * Get the size (width, height) of an extent.
-// * @param {module:ol/extent~Extent} extent The extent.
-// * @return {module:ol/size~Size} The extent size.
-// * @api
-// */
-//export function getSize(extent) {
-//  return [extent[2] - extent[0], extent[3] - extent[1]];
-//}
-//
-//
-///**
-// * Get the top left coordinate of an extent.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @return {module:ol/coordinate~Coordinate} Top left coordinate.
-// * @api
-// */
-//export function getTopLeft(extent) {
-//  return [extent[0], extent[3]];
-//}
-//
-//
-///**
-// * Get the top right coordinate of an extent.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @return {module:ol/coordinate~Coordinate} Top right coordinate.
-// * @api
-// */
-//export function getTopRight(extent) {
-//  return [extent[2], extent[3]];
-//}
-//
-//
-///**
-// * Get the width of an extent.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @return {number} Width.
-// * @api
-// */
-//export function getWidth(extent) {
-//  return extent[2] - extent[0];
-//}
-//
-//
+
+
+/**
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @return {number} Margin.
+ */
+inline number_t getMargin(Extent const &extent)
+{
+    return getWidth(extent) + getHeight(extent);
+}
+
+
+/**
+ * Get the size (width, height) of an extent.
+ * @param {module:ol/extent~Extent} extent The extent.
+ * @return {module:ol/size~Size} The extent size.
+ * @api
+ */
+inline ol::size::Size getSize(Extent const &extent) 
+{
+    return { extent[2] - extent[0], extent[3] - extent[1] };
+}
+
+
+/**
+ * Get the top left coordinate of an extent.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @return {module:ol/coordinate~Coordinate} Top left coordinate.
+ * @api
+ */
+inline ol::coordinate::Coordinate getTopLeft(Extent const &extent) 
+{
+    return { extent[0], extent[3] };
+}
+
+
+/**
+ * Get the top right coordinate of an extent.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @return {module:ol/coordinate~Coordinate} Top right coordinate.
+ * @api
+ */
+inline ol::coordinate::Coordinate getTopRight(Extent const &extent) 
+{
+    return { extent[2], extent[3] };
+}
+
+/**
+ * Get the width of an extent.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @return {number} Width.
+ * @api
+ */
+inline number_t getWidth(Extent const &extent)
+{
+    return extent[2] - extent[0];
+}
+
+
 ///**
 // * Determine if one extent intersects another.
 // * @param {module:ol/extent~Extent} extent1 Extent 1.

@@ -7,6 +7,10 @@
 //import AssertionError from './AssertionError.js';
 #include "AssertionError.h"
 
+#ifdef _DEBUG
+#   include <iostream>
+#endif
+
 namespace ol {
 namespace asserts {
 
@@ -14,8 +18,12 @@ namespace asserts {
  * @param {*} assertion Assertion we expected to be truthy.
  * @param {number} errorCode Error code.
  */
-inline void Assert(bool assertion, int errorCode) {
+inline void Assert(bool assertion, int errorCode) 
+{
     if (!assertion) {
+#ifdef _DEBUG
+        std::cerr << "ol::asserts::Assert failed: " << AssertionError(errorCode).message() << std::endl;
+#endif
         throw AssertionError(errorCode);
     }
 }

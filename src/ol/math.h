@@ -3,13 +3,14 @@
 
 #include "jsport.h"
 
-namespace ol {
-namespace math {
 ///**
 // * @module ol/math
 // */
 //import {assert} from './asserts.js';
+#include "asserts.h"
 //
+namespace ol {
+namespace math {
 ///**
 // * Takes a number and clamps it to within the provided bounds.
 // * @param {number} value The input number.

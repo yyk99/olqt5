@@ -44,7 +44,9 @@ set(OLQT_SRC
     ./events/EventType.cpp
     ./events/EventType.h
     ./events/KeyCode.h
+    ./extent.cpp
     ./extent.h
+    ./extent/Corner.cpp
     ./extent/Corner.h
     ./extent/Relationship.h
     ./Feature.h
@@ -106,6 +108,7 @@ set(OLQT_SRC
     ./Geolocation.h
     ./GeolocationProperty.h
     ./geom.h
+    ./geom/Circle.cpp
     ./geom/Circle.h
     ./geom/flat/area.h
     ./geom/flat/center.h
@@ -221,9 +224,12 @@ set(OLQT_SRC
     ./proj/epsg3857.h
     ./proj/epsg4326.h
     ./proj/proj4.h
+    ./proj/Projection.cpp
     ./proj/Projection.h
+    ./proj/projections.cpp
     ./proj/projections.h
     ./proj/transforms.h
+    ./proj/Units.cpp
     ./proj/Units.h
     ./render.h
     ./render/Box.h

@@ -74,52 +74,54 @@ int numberSafeCompareFunction(T const &a, T const &b)
 //}
 //
 //
-///**
-// * @param {Array.<number>} arr Array.
-// * @param {number} target Target.
-// * @param {number} direction 0 means return the nearest, > 0
-// *    means return the largest nearest, < 0 means return the
-// *    smallest nearest.
-// * @return {number} Index.
-// */
-//export function linearFindNearest(arr, target, direction) {
-//  const n = arr.length;
-//  if (arr[0] <= target) {
-//    return 0;
-//  } else if (target <= arr[n - 1]) {
-//    return n - 1;
-//  } else {
-//    let i;
-//    if (direction > 0) {
-//      for (i = 1; i < n; ++i) {
-//        if (arr[i] < target) {
-//          return i - 1;
-//        }
-//      }
-//    } else if (direction < 0) {
-//      for (i = 1; i < n; ++i) {
-//        if (arr[i] <= target) {
-//          return i;
-//        }
-//      }
-//    } else {
-//      for (i = 1; i < n; ++i) {
-//        if (arr[i] == target) {
-//          return i;
-//        } else if (arr[i] < target) {
-//          if (arr[i - 1] - target < target - arr[i]) {
-//            return i - 1;
-//          } else {
-//            return i;
-//          }
-//        }
-//      }
-//    }
-//    return n - 1;
-//  }
-//}
-//
-//
+/**
+ * @param {Array.<number>} arr Array.
+ * @param {number} target Target.
+ * @param {number} direction 0 means return the nearest, > 0
+ *    means return the largest nearest, < 0 means return the
+ *    smallest nearest.
+ * @return {number} Index.
+ */
+template <typename T>
+int linearFindNearest(std::vector<T> const &arr, T const &target, T const &direction)
+{
+    auto n = arr.size();
+  if (arr[0] <= target) {
+    return 0;
+  } else if (target <= arr[n - 1]) {
+    return n - 1;
+  } else {
+    let i;
+    if (direction > 0) {
+      for (i = 1; i < n; ++i) {
+        if (arr[i] < target) {
+          return i - 1;
+        }
+      }
+    } else if (direction < 0) {
+      for (i = 1; i < n; ++i) {
+        if (arr[i] <= target) {
+          return i;
+        }
+      }
+    } else {
+      for (i = 1; i < n; ++i) {
+        if (arr[i] == target) {
+          return i;
+        } else if (arr[i] < target) {
+          if (arr[i - 1] - target < target - arr[i]) {
+            return i - 1;
+          } else {
+            return i;
+          }
+        }
+      }
+    }
+    return n - 1;
+  }
+}
+
+
 ///**
 // * @param {Array.<*>} arr Array.
 // * @param {number} begin Begin index.
