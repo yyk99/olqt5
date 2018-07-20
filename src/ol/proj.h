@@ -6,6 +6,9 @@
  */
 
 #include <string>
+#include <vector>
+
+#include "jsport.h"
 
 /**
  * The ol/proj module stores:
@@ -58,7 +61,44 @@
  * {@link module:ol/proj~addProjection}. See examples/wms-no-proj for an example of
  * this.
  */
+#include "dll_export.h"
 
+namespace ol {
+namespace proj {
+
+/**
+* A projection as {@link module:ol/proj/Projection}, SRS identifier
+* string or undefined.
+* @typedef {module:ol/proj/Projection|string|undefined} ProjectionLike
+* @api
+*/
+
+typedef std::string ProjectionLike;
+
+/**
+* A transform function accepts an array of input coordinate values, an optional
+* output array, and an optional dimension (default should be 2).  The function
+* transforms the input coordinate values, populates the output array, and
+* returns the output array.
+*
+* @typedef {function(Array.<number>, Array.<number>=, number=): Array.<number>} TransformFunction
+* @api
+*/
+
+#if 1
+class TransformFunctionObj {
+public:
+    virtual std::vector<number_t> & operator ()(std::vector<number_t> const &, std::vector<number_t> &, size_t) = 0;
+};
+
+typedef TransformFunctionObj *TransformFunction;
+
+#else
+typedef void *TransformFunction;
+#endif
+
+}
+}
  //import {getDistance} from './sphere.js';
 //import {applyTransform} from './extent.js';
 //import {modulo} from './math.js';
@@ -73,64 +113,10 @@
 //import {add as addTransformFunc, clear as clearTransformFuncs, get as getTransformFunc} from './proj/transforms.js';
 #include "./proj/transforms.h"
 
-#include "proj.h"
-
-#include "dll_export.h"
+//export {METERS_PER_UNIT};
 
 namespace ol {
 namespace proj {
-
-/**
- * A projection as {@link module:ol/proj/Projection}, SRS identifier
- * string or undefined.
- * @typedef {module:ol/proj/Projection|string|undefined} ProjectionLike
- * @api
- */
-
-typedef std::string ProjectionLike;
-
-/**
- * A transform function accepts an array of input coordinate values, an optional
- * output array, and an optional dimension (default should be 2).  The function
- * transforms the input coordinate values, populates the output array, and
- * returns the output array.
- *
- * @typedef {function(Array.<number>, Array.<number>=, number=): Array.<number>} TransformFunction
- * @api
- */
-
-//typedef std::vector<number_t> & (*TransformFunction)(std::vector<number_t> const &, std::vector<number_t> &, ol::number_t);
-typedef void *TransformFunction;
-
-//export {METERS_PER_UNIT};
-
-
-/**
- * @param {Array.<number>} input Input coordinate array.
- * @param {Array.<number>=} opt_output Output array of coordinate values.
- * @param {number=} opt_dimension Dimension.
- * @return {Array.<number>} Output coordinate array (new array, same coordinate
- *     values).
- */
-OLQT_EXPORT  std::vector<ol::number_t> & cloneTransform(std::vector<ol::number_t> const &input, std::vector<ol::number_t> &opt_output, number_t opt_dimension);
-
-
-///**
-// * @param {Array.<number>} input Input coordinate array.
-// * @param {Array.<number>=} opt_output Output array of coordinate values.
-// * @param {number=} opt_dimension Dimension.
-// * @return {Array.<number>} Input coordinate array (same array as input).
-// */
-//export function identityTransform(input, opt_output, opt_dimension) {
-//  if (opt_output !== undefined && input !== opt_output) {
-//    for (let i = 0, ii = input.length; i < ii; ++i) {
-//      opt_output[i] = input[i];
-//    }
-//    input = opt_output;
-//  }
-//  return input;
-//}
-
 
 /**
  * Add a Projection object to the list of supported projections that can be
@@ -157,77 +143,35 @@ OLQT_EXPORT void addProjections(std::vector<ProjectionP> const &projections);
  * @return {module:ol/proj/Projection} Projection object, or null if not in list.
  * @api
  */
-inline ProjectionP get(ProjectionLike projectionLike)
+OLQT_EXPORT ProjectionP get(ProjectionLike projectionLike);
+
+inline ProjectionP getProjection(ProjectionLike projectionLike)
 {
-#if 0
-    let projection = null;
-    if (projectionLike instanceof Projection) {
-        projection = projectionLike;
-    } else if (typeof projectionLike == = 'string') {
-        const code = projectionLike;
-        projection = projections.get(code);
-    }
-    return projection;
-#endif
-    return projections::get(projectionLike);
+    return get(projectionLike);
 }
-//
-//
-///**
-// * Get the resolution of the point in degrees or distance units.
-// * For projections with degrees as the unit this will simply return the
-// * provided resolution. For other projections the point resolution is
-// * by default estimated by transforming the 'point' pixel to EPSG:4326,
-// * measuring its width and height on the normal sphere,
-// * and taking the average of the width and height.
-// * A custom function can be provided for a specific projection, either
-// * by setting the `getPointResolution` option in the
-// * {@link module:ol/proj/Projection~Projection} constructor or by using
-// * {@link module:ol/proj/Projection~Projection#setGetPointResolution} to change an existing
-// * projection object.
-// * @param {module:ol/proj~ProjectionLike} projection The projection.
-// * @param {number} resolution Nominal resolution in projection units.
-// * @param {module:ol/coordinate~Coordinate} point Point to find adjusted resolution at.
-// * @param {module:ol/proj/Units=} opt_units Units to get the point resolution in.
-// * Default is the projection's units.
-// * @return {number} Point resolution.
-// * @api
-// */
-//export function getPointResolution(projection, resolution, point, opt_units) {
-//  projection = get(projection);
-//  let pointResolution;
-//  const getter = projection.getPointResolutionFunc();
-//  if (getter) {
-//    pointResolution = getter(resolution, point);
-//  } else {
-//    const units = projection.getUnits();
-//    if (units == Units.DEGREES && !opt_units || opt_units == Units.DEGREES) {
-//      pointResolution = resolution;
-//    } else {
-//      // Estimate point resolution by transforming the center pixel to EPSG:4326,
-//      // measuring its width and height on the normal sphere, and taking the
-//      // average of the width and height.
-//      const toEPSG4326 = getTransformFromProjections(projection, get('EPSG:4326'));
-//      let vertices = [
-//        point[0] - resolution / 2, point[1],
-//        point[0] + resolution / 2, point[1],
-//        point[0], point[1] - resolution / 2,
-//        point[0], point[1] + resolution / 2
-//      ];
-//      vertices = toEPSG4326(vertices, vertices, 2);
-//      const width = getDistance(vertices.slice(0, 2), vertices.slice(2, 4));
-//      const height = getDistance(vertices.slice(4, 6), vertices.slice(6, 8));
-//      pointResolution = (width + height) / 2;
-//      const metersPerUnit = opt_units ?
-//        METERS_PER_UNIT[opt_units] :
-//        projection.getMetersPerUnit();
-//      if (metersPerUnit !== undefined) {
-//        pointResolution /= metersPerUnit;
-//      }
-//    }
-//  }
-//  return pointResolution;
-//}
+
+
+/**
+ * Get the resolution of the point in degrees or distance units.
+ * For projections with degrees as the unit this will simply return the
+ * provided resolution. For other projections the point resolution is
+ * by default estimated by transforming the 'point' pixel to EPSG:4326,
+ * measuring its width and height on the normal sphere,
+ * and taking the average of the width and height.
+ * A custom function can be provided for a specific projection, either
+ * by setting the `getPointResolution` option in the
+ * {@link module:ol/proj/Projection~Projection} constructor or by using
+ * {@link module:ol/proj/Projection~Projection#setGetPointResolution} to change an existing
+ * projection object.
+ * @param {module:ol/proj~ProjectionLike} projection The projection.
+ * @param {number} resolution Nominal resolution in projection units.
+ * @param {module:ol/coordinate~Coordinate} point Point to find adjusted resolution at.
+ * @param {module:ol/proj/Units=} opt_units Units to get the point resolution in.
+ * Default is the projection's units.
+ * @return {number} Point resolution.
+ * @api
+ */
+number_t OLQT_EXPORT getPointResolution(ProjectionP projection, number_t resolution, ol::coordinate::Coordinate const &point/*, std::string const &opt_units*/);
 
 
 /**
@@ -237,18 +181,7 @@ inline ProjectionP get(ProjectionLike projectionLike)
  * @param {Array.<module:ol/proj/Projection>} projections Projections.
  * @api
  */
-inline void addEquivalentProjections(std::vector<ProjectionP> const &projections)
-{
-    // TODO: implement
-    //addProjections(projections);
-    //projections.forEach(function(source) {
-    //    projections.forEach(function(destination) {
-    //        if (source !== destination) {
-    //            addTransformFunc(source, destination, cloneTransform);
-    //        }
-    //    });
-    //});
-}
+OLQT_EXPORT void addEquivalentProjections(std::vector<ProjectionP> const &projections);
 
 
 /**
@@ -264,26 +197,13 @@ inline void addEquivalentProjections(std::vector<ProjectionP> const &projections
  * @param {module:ol/proj~TransformFunction} inverseTransform Transform from any projection
  *   in projection2 to any projection in projection1..
  */
-inline void  addEquivalentTransforms(std::vector<ProjectionP> const &projections1, std::vector<ProjectionP> const &projections2, 
-    ol::proj::TransformFunction forwardTransform, ol::proj::TransformFunction inverseTransform)
-{
-    // TODO: implement
+OLQT_EXPORT void  addEquivalentTransforms(std::vector<ProjectionP> const &projections1, std::vector<ProjectionP> const &projections2,
+    ol::proj::TransformFunction forwardTransform, ol::proj::TransformFunction inverseTransform);
 
-    //projections1.forEach(function(projection1) {
-    //    projections2.forEach(function(projection2) {
-    //        addTransformFunc(projection1, projection2, forwardTransform);
-    //        addTransformFunc(projection2, projection1, inverseTransform);
-    //    });
-    //});
-}
-
-///**
-// * Clear all cached projections and transforms.
-// */
-//export function clearAllProjections() {
-//  projections.clear();
-//  clearTransformFuncs();
-//}
+/**
+ * Clear all cached projections and transforms.
+ */
+OLQT_EXPORT void clearAllProjections();
 //
 //
 ///**
@@ -420,28 +340,20 @@ inline void  addEquivalentTransforms(std::vector<ProjectionP> const &projections
 //    return transformFunc === cloneTransform && equalUnits;
 //  }
 //}
-//
-//
-///**
-// * Searches in the list of transform functions for the function for converting
-// * coordinates from the source projection to the destination projection.
-// *
-// * @param {module:ol/proj/Projection} sourceProjection Source Projection object.
-// * @param {module:ol/proj/Projection} destinationProjection Destination Projection
-// *     object.
-// * @return {module:ol/proj~TransformFunction} Transform function.
-// */
-//export function getTransformFromProjections(sourceProjection, destinationProjection) {
-//  const sourceCode = sourceProjection.getCode();
-//  const destinationCode = destinationProjection.getCode();
-//  let transformFunc = getTransformFunc(sourceCode, destinationCode);
-//  if (!transformFunc) {
-//    transformFunc = identityTransform;
-//  }
-//  return transformFunc;
-//}
-//
-//
+
+
+/**
+ * Searches in the list of transform functions for the function for converting
+ * coordinates from the source projection to the destination projection.
+ *
+ * @param {module:ol/proj/Projection} sourceProjection Source Projection object.
+ * @param {module:ol/proj/Projection} destinationProjection Destination Projection
+ *     object.
+ * @return {module:ol/proj~TransformFunction} Transform function.
+ */
+OLQT_EXPORT TransformFunction getTransformFromProjections(ProjectionP sourceProjection, ProjectionP destinationProjection);
+
+
 ///**
 // * Given the projection-like objects, searches for a transformation
 // * function to convert a coordinates array from the source projection to the
@@ -457,38 +369,34 @@ inline void  addEquivalentTransforms(std::vector<ProjectionP> const &projections
 //  const destinationProjection = get(destination);
 //  return getTransformFromProjections(sourceProjection, destinationProjection);
 //}
-//
-//
-///**
-// * Transforms a coordinate from source projection to destination projection.
-// * This returns a new coordinate (and does not modify the original).
-// *
-// * See {@link module:ol/proj~transformExtent} for extent transformation.
-// * See the transform method of {@link module:ol/geom/Geometry~Geometry} and its
-// * subclasses for geometry transforms.
-// *
-// * @param {module:ol/coordinate~Coordinate} coordinate Coordinate.
-// * @param {module:ol/proj~ProjectionLike} source Source projection-like.
-// * @param {module:ol/proj~ProjectionLike} destination Destination projection-like.
-// * @return {module:ol/coordinate~Coordinate} Coordinate.
-// * @api
-// */
-//export function transform(coordinate, source, destination) {
-//  const transformFunc = getTransform(source, destination);
-//  return transformFunc(coordinate, undefined, coordinate.length);
-//}
-//
-//
-///**
-// * Transforms an extent from source projection to destination projection.  This
-// * returns a new extent (and does not modify the original).
-// *
-// * @param {module:ol/extent~Extent} extent The extent to transform.
-// * @param {module:ol/proj~ProjectionLike} source Source projection-like.
-// * @param {module:ol/proj~ProjectionLike} destination Destination projection-like.
-// * @return {module:ol/extent~Extent} The transformed extent.
-// * @api
-// */
+
+/**
+ * Transforms a coordinate from source projection to destination projection.
+ * This returns a new coordinate (and does not modify the original).
+ *
+ * See {@link module:ol/proj~transformExtent} for extent transformation.
+ * See the transform method of {@link module:ol/geom/Geometry~Geometry} and its
+ * subclasses for geometry transforms.
+ *
+ * @param {module:ol/coordinate~Coordinate} coordinate Coordinate.
+ * @param {module:ol/proj~ProjectionLike} source Source projection-like.
+ * @param {module:ol/proj~ProjectionLike} destination Destination projection-like.
+ * @return {module:ol/coordinate~Coordinate} Coordinate.
+ * @api
+ */
+OLQT_EXPORT ol::coordinate::Coordinate transform(ol::coordinate::Coordinate const &coordinate,
+    ProjectionP source, ProjectionP destination);
+
+/**
+ * Transforms an extent from source projection to destination projection.  This
+ * returns a new extent (and does not modify the original).
+ *
+ * @param {module:ol/extent~Extent} extent The extent to transform.
+ * @param {module:ol/proj~ProjectionLike} source Source projection-like.
+ * @param {module:ol/proj~ProjectionLike} destination Destination projection-like.
+ * @return {module:ol/extent~Extent} The transformed extent.
+ * @api
+ */
 //export function transformExtent(extent, source, destination) {
 //  const transformFunc = getTransform(source, destination);
 //  return applyTransform(extent, transformFunc);
@@ -516,12 +424,6 @@ inline void  addEquivalentTransforms(std::vector<ProjectionP> const &projections
 OLQT_EXPORT void addCommon();
 
 // addCommon();
-
-struct once {
-    once() {
-        addCommon();
-    }
-};
 
 }
 }

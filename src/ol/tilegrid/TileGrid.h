@@ -351,14 +351,15 @@ public:
     }
     
     
-    ///**
-    // * Get the list of resolutions for the tile grid.
-    // * @return {Array.<number>} Resolutions.
-    // * @api
-    // */
-    //TileGrid.prototype.getResolutions = function() {
-    //  return this.resolutions_;
-    //};
+    /**
+     * Get the list of resolutions for the tile grid.
+     * @return {Array.<number>} Resolutions.
+     * @api
+     */
+    std::vector<number_t> const &getResolutions() const
+    {
+        return resolutions_;
+    }
     //
     //
     ///**

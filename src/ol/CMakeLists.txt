@@ -199,6 +199,7 @@ set(OLQT_SRC
     ./MapEventType.h
     ./MapProperty.h
     ./math.h
+    ./math_pi.h
     ./net.h
     ./obj.h
     ./Object.cpp
@@ -223,12 +224,14 @@ set(OLQT_SRC
     ./proj.h
     ./proj/epsg3857.cpp
     ./proj/epsg3857.h
+    ./proj/epsg4326.cpp
     ./proj/epsg4326.h
     ./proj/proj4.h
     ./proj/Projection.cpp
     ./proj/Projection.h
     ./proj/projections.cpp
     ./proj/projections.h
+    ./proj/transforms.cpp
     ./proj/transforms.h
     ./proj/Units.cpp
     ./proj/Units.h
