@@ -1,6 +1,8 @@
 #ifndef OL_PROJ_PROJECTION_H
 #define OL_PROJ_PROJECTION_H
 
+#include <memory> // std::shared_ptr
+
 #include "../dll_export.h"
 
 ///**
@@ -147,18 +149,17 @@ public:
     bool canWrapX() const {
         return canWrapX_;
     }
-    //
-    //
-    ///**
-    // * Get the code for this projection, e.g. 'EPSG:4326'.
-    // * @return {string} Code.
-    // * @api
-    // */
-    //Projection.prototype.getCode = function() {
-    //  return this.code_;
-    //};
-    //
-    //
+    
+    
+    /**
+     * Get the code for this projection, e.g. 'EPSG:4326'.
+     * @return {string} Code.
+     * @api
+     */
+    std::string getCode() {
+        return code_;
+    }
+    
     /**
      * Get the validity extent for this projection.
      * @return {module:ol/extent~Extent} Extent.
@@ -301,8 +302,12 @@ private:
     bool canWrapX_;
     ol::extent::Extent extent_;
     double metersPerUnit_;
+    std::string code_;
 };
 //export default Projection;
+
+typedef std::shared_ptr<Projection> ProjectionP;
+
 }
 }
 #endif // OL_PROJ_PROJECTION_H

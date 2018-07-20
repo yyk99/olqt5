@@ -71,6 +71,11 @@
 //import * as projections from './proj/projections.js';
 #include "./proj/projections.h"
 //import {add as addTransformFunc, clear as clearTransformFuncs, get as getTransformFunc} from './proj/transforms.js';
+#include "./proj/transforms.h"
+
+#include "proj.h"
+
+#include "dll_export.h"
 
 namespace ol {
 namespace proj {
@@ -94,31 +99,22 @@ typedef std::string ProjectionLike;
  * @api
  */
 
+//typedef std::vector<number_t> & (*TransformFunction)(std::vector<number_t> const &, std::vector<number_t> &, ol::number_t);
+typedef void *TransformFunction;
 
 //export {METERS_PER_UNIT};
-//
-//
-///**
-// * @param {Array.<number>} input Input coordinate array.
-// * @param {Array.<number>=} opt_output Output array of coordinate values.
-// * @param {number=} opt_dimension Dimension.
-// * @return {Array.<number>} Output coordinate array (new array, same coordinate
-// *     values).
-// */
-//export function cloneTransform(input, opt_output, opt_dimension) {
-//  let output;
-//  if (opt_output !== undefined) {
-//    for (let i = 0, ii = input.length; i < ii; ++i) {
-//      opt_output[i] = input[i];
-//    }
-//    output = opt_output;
-//  } else {
-//    output = input.slice();
-//  }
-//  return output;
-//}
-//
-//
+
+
+/**
+ * @param {Array.<number>} input Input coordinate array.
+ * @param {Array.<number>=} opt_output Output array of coordinate values.
+ * @param {number=} opt_dimension Dimension.
+ * @return {Array.<number>} Output coordinate array (new array, same coordinate
+ *     values).
+ */
+OLQT_EXPORT  std::vector<ol::number_t> & cloneTransform(std::vector<ol::number_t> const &input, std::vector<ol::number_t> &opt_output, number_t opt_dimension);
+
+
 ///**
 // * @param {Array.<number>} input Input coordinate array.
 // * @param {Array.<number>=} opt_output Output array of coordinate values.
@@ -134,29 +130,24 @@ typedef std::string ProjectionLike;
 //  }
 //  return input;
 //}
-//
-//
-///**
-// * Add a Projection object to the list of supported projections that can be
-// * looked up by their code.
-// *
-// * @param {module:ol/proj/Projection} projection Projection instance.
-// * @api
-// */
-//export function addProjection(projection) {
-//  projections.add(projection.getCode(), projection);
-//  addTransformFunc(projection, projection, cloneTransform);
-//}
-//
-//
-///**
-// * @param {Array.<module:ol/proj/Projection>} projections Projections.
-// */
-//export function addProjections(projections) {
-//  projections.forEach(addProjection);
-//}
-//
-//
+
+
+/**
+ * Add a Projection object to the list of supported projections that can be
+ * looked up by their code.
+ *
+ * @param {module:ol/proj/Projection} projection Projection instance.
+ * @api
+ */
+OLQT_EXPORT void addProjection(ProjectionP projection);
+
+
+/**
+ * @param {Array.<module:ol/proj/Projection>} projections Projections.
+ */
+OLQT_EXPORT void addProjections(std::vector<ProjectionP> const &projections);
+
+
 /**
  * Fetches a Projection object for the code specified.
  *
@@ -237,50 +228,55 @@ inline ProjectionP get(ProjectionLike projectionLike)
 //  }
 //  return pointResolution;
 //}
-//
-//
-///**
-// * Registers transformation functions that don't alter coordinates. Those allow
-// * to transform between projections with equal meaning.
-// *
-// * @param {Array.<module:ol/proj/Projection>} projections Projections.
-// * @api
-// */
-//export function addEquivalentProjections(projections) {
-//  addProjections(projections);
-//  projections.forEach(function(source) {
-//    projections.forEach(function(destination) {
-//      if (source !== destination) {
-//        addTransformFunc(source, destination, cloneTransform);
-//      }
-//    });
-//  });
-//}
-//
-//
-///**
-// * Registers transformation functions to convert coordinates in any projection
-// * in projection1 to any projection in projection2.
-// *
-// * @param {Array.<module:ol/proj/Projection>} projections1 Projections with equal
-// *     meaning.
-// * @param {Array.<module:ol/proj/Projection>} projections2 Projections with equal
-// *     meaning.
-// * @param {module:ol/proj~TransformFunction} forwardTransform Transformation from any
-// *   projection in projection1 to any projection in projection2.
-// * @param {module:ol/proj~TransformFunction} inverseTransform Transform from any projection
-// *   in projection2 to any projection in projection1..
-// */
-//export function addEquivalentTransforms(projections1, projections2, forwardTransform, inverseTransform) {
-//  projections1.forEach(function(projection1) {
-//    projections2.forEach(function(projection2) {
-//      addTransformFunc(projection1, projection2, forwardTransform);
-//      addTransformFunc(projection2, projection1, inverseTransform);
-//    });
-//  });
-//}
-//
-//
+
+
+/**
+ * Registers transformation functions that don't alter coordinates. Those allow
+ * to transform between projections with equal meaning.
+ *
+ * @param {Array.<module:ol/proj/Projection>} projections Projections.
+ * @api
+ */
+inline void addEquivalentProjections(std::vector<ProjectionP> const &projections)
+{
+    // TODO: implement
+    //addProjections(projections);
+    //projections.forEach(function(source) {
+    //    projections.forEach(function(destination) {
+    //        if (source !== destination) {
+    //            addTransformFunc(source, destination, cloneTransform);
+    //        }
+    //    });
+    //});
+}
+
+
+/**
+ * Registers transformation functions to convert coordinates in any projection
+ * in projection1 to any projection in projection2.
+ *
+ * @param {Array.<module:ol/proj/Projection>} projections1 Projections with equal
+ *     meaning.
+ * @param {Array.<module:ol/proj/Projection>} projections2 Projections with equal
+ *     meaning.
+ * @param {module:ol/proj~TransformFunction} forwardTransform Transformation from any
+ *   projection in projection1 to any projection in projection2.
+ * @param {module:ol/proj~TransformFunction} inverseTransform Transform from any projection
+ *   in projection2 to any projection in projection1..
+ */
+inline void  addEquivalentTransforms(std::vector<ProjectionP> const &projections1, std::vector<ProjectionP> const &projections2, 
+    ol::proj::TransformFunction forwardTransform, ol::proj::TransformFunction inverseTransform)
+{
+    // TODO: implement
+
+    //projections1.forEach(function(projection1) {
+    //    projections2.forEach(function(projection2) {
+    //        addTransformFunc(projection1, projection2, forwardTransform);
+    //        addTransformFunc(projection2, projection1, inverseTransform);
+    //    });
+    //});
+}
+
 ///**
 // * Clear all cached projections and transforms.
 // */
@@ -511,23 +507,22 @@ inline ProjectionP get(ProjectionLike projectionLike)
 //  const transformFunc = getTransformFromProjections(sourceProjection, destinationProjection);
 //  return transformFunc(point);
 //}
-//
-///**
-// * Add transforms to and from EPSG:4326 and EPSG:3857.  This function is called
-// * by when this module is executed and should only need to be called again after
-// * `clearAllProjections()` is called (e.g. in tests).
-// */
-//export function addCommon() {
-//  // Add transformations that don't alter coordinates to convert within set of
-//  // projections with equal meaning.
-//  addEquivalentProjections(EPSG3857_PROJECTIONS);
-//  addEquivalentProjections(EPSG4326_PROJECTIONS);
-//  // Add transformations to convert EPSG:4326 like coordinates to EPSG:3857 like
-//  // coordinates and back.
-//  addEquivalentTransforms(EPSG4326_PROJECTIONS, EPSG3857_PROJECTIONS, fromEPSG4326, toEPSG4326);
-//}
-//
-//addCommon();
+
+/**
+ * Add transforms to and from EPSG:4326 and EPSG:3857.  This function is called
+ * by when this module is executed and should only need to be called again after
+ * `clearAllProjections()` is called (e.g. in tests).
+ */
+OLQT_EXPORT void addCommon();
+
+// addCommon();
+
+struct once {
+    once() {
+        addCommon();
+    }
+};
+
 }
 }
 #endif // OL_PROJ_H

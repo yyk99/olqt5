@@ -14,6 +14,9 @@
 //import Units from '../proj/Units.js';
 #include "../proj/Units.h"
 
+#include "../dll_export.h"
+#include "projections.h"
+
 namespace ol {
 namespace proj {
 namespace epsg3857 {
@@ -75,13 +78,14 @@ namespace epsg3857 {
 //inherits(EPSG3857Projection, Projection);
 //
 //
-///**
-// * Projections equal to EPSG:3857.
-// *
-// * @const
-// * @type {Array.<module:ol/proj/Projection>}
-// */
-//export const PROJECTIONS = [
+/**
+ * Projections equal to EPSG:3857.
+ *
+ * @const
+ * @type {Array.<module:ol/proj/Projection>}
+ */
+extern std::vector<ol::proj::ProjectionP> PROJECTIONS;
+//= [
 //  new EPSG3857Projection('EPSG:3857'),
 //  new EPSG3857Projection('EPSG:102100'),
 //  new EPSG3857Projection('EPSG:102113'),
@@ -90,7 +94,7 @@ namespace epsg3857 {
 //  new EPSG3857Projection('urn:ogc:def:crs:EPSG::3857'),
 //  new EPSG3857Projection('http://www.opengis.net/gml/srs/epsg.xml#3857')
 //];
-//
+
 //
 ///**
 // * Transformation from EPSG:4326 to EPSG:3857.

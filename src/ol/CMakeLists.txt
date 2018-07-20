@@ -219,6 +219,7 @@ set(OLQT_SRC
     ./pointer/PointerEvent.h
     ./pointer/PointerEventHandler.h
     ./pointer/TouchSource.h
+    ./proj.cpp
     ./proj.h
     ./proj/epsg3857.cpp
     ./proj/epsg3857.h

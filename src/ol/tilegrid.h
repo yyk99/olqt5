@@ -22,6 +22,8 @@
 #include "tilegrid/TileGrid.h"
 //
 
+#include "dll_export.h"
+
 namespace ol {
 namespace tilegrid {
 
@@ -143,7 +145,10 @@ std::vector<number_t> resolutionsFromExtent(ol::extent::Extent const &extent, in
  * @param {module:ol/extent/Corner=} opt_corner Extent corner (default is `'top-left'`).
  * @return {!module:ol/tilegrid/TileGrid} TileGrid instance.
  */
-ol::tilegrid::TileGrid createForProjection(ol::proj::ProjectionLike projection, int opt_maxZoom = DEFAULT_MAX_ZOOM, 
+ol::tilegrid::TileGrid OLQT_EXPORT createForProjection(ol::proj::ProjectionLike projection, int opt_maxZoom = DEFAULT_MAX_ZOOM, 
+    int opt_tileSize = DEFAULT_TILE_SIZE, std::string const &opt_corner = ol::extent::Corner::TOP_LEFT /*"top-left"*/);
+
+ol::tilegrid::TileGrid OLQT_EXPORT createForProjection(ol::proj::ProjectionP projection, int opt_maxZoom = DEFAULT_MAX_ZOOM,
     int opt_tileSize = DEFAULT_TILE_SIZE, std::string const &opt_corner = ol::extent::Corner::TOP_LEFT /*"top-left"*/);
 
 /**
@@ -152,17 +157,24 @@ ol::tilegrid::TileGrid createForProjection(ol::proj::ProjectionLike projection, 
  * @param {module:ol/proj~ProjectionLike} projection Projection.
  * @return {module:ol/extent~Extent} Extent.
  */
-ol::extent::Extent extentFromProjection(ol::proj::ProjectionLike prj) 
+ol::extent::Extent extentFromProjection(ol::proj::ProjectionP projection)
+{
+    auto extent = projection->getExtent();
+    if (!extent.size())
+    {
+        ol::number_t half = 180 * ol::proj::METERS_PER_UNIT[ol::proj::Units::DEGREES] / projection->getMetersPerUnit();
+        extent = ol::extent::createOrUpdate(-half, -half, half, half);
+    }
+    return extent;
+}
+
+inline ol::extent::Extent extentFromProjection(ol::proj::ProjectionLike prj)
 {
   auto projection = ol::proj::get(prj);
-  auto extent = projection->getExtent();
-  if (!extent.size())
-  {
-      ol::number_t half = 180 * ol::proj::METERS_PER_UNIT[ol::proj::Units::DEGREES] / projection->getMetersPerUnit();
-      extent = ol::extent::createOrUpdate(-half, -half, half, half);
-  }
-  return extent;
+  return extentFromProjection(projection);
 }
+
+
 }
 }
 #endif // OL_TILEGRID_H

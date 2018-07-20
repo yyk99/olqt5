@@ -27,3 +27,9 @@ ol::tilegrid::TileGrid ol::tilegrid::createForProjection(ol::proj::ProjectionLik
     auto extent = extentFromProjection(projection);
     return createForExtent(extent, opt_maxZoom, opt_tileSize, opt_corner);
 }
+
+ol::tilegrid::TileGrid ol::tilegrid::createForProjection(ol::proj::ProjectionP projection, int opt_maxZoom, int opt_tileSize, std::string const & opt_corner)
+{
+    auto extent = extentFromProjection(projection);
+    return createForExtent(extent, opt_maxZoom, opt_tileSize, opt_corner);
+}

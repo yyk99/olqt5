@@ -49,4 +49,7 @@ add_ol_test(events/eventtarget)
 # tilegrid dir
 add_ol_test(tilegrid/tilegrid)
 
+#
+add_ol_test(proj/epsg3857)
+
 # end of file

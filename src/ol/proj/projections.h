@@ -13,8 +13,6 @@
 namespace ol {
 namespace proj {
 
-typedef std::shared_ptr<Projection> ProjectionP;
-
 struct OLQT_EXPORT projections 
 {
     /**
