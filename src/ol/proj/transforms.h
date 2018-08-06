@@ -46,8 +46,8 @@ struct OLQT_EXPORT transforms {
         auto sourceCode = source->getCode();
         auto destinationCode = destination->getCode();
 
-        //if (!(sourceCode in transforms)) {
-        //    transforms[sourceCode] = {};
+        //if (!(transforms_cache.count(sourceCode))) {
+        //    transforms_cache[sourceCode] = std::map<std::string, ol::proj::TransformFunction>();
         //}
         transforms_cache[sourceCode][destinationCode] = transformFn;
     }
@@ -65,14 +65,13 @@ struct OLQT_EXPORT transforms {
     static ol::proj::TransformFunction remove(ol::proj::ProjectionP source, ol::proj::ProjectionP destination)
     {
         ol::proj::TransformFunction transform = ol::proj::TransformFunction();
-        // TODO: implement
-        //const sourceCode = source.getCode();
-        //const destinationCode = destination.getCode();
-        //transform = transforms_cache[sourceCode][destinationCode];
-        //delete transforms[sourceCode][destinationCode];
-        //if (isEmpty(transforms[sourceCode])) {
-        //    delete transforms[sourceCode];
-        //}
+        std::string sourceCode = source->getCode();
+        std::string destinationCode = destination->getCode();
+        transform = transforms_cache[sourceCode][destinationCode];
+        transforms_cache[sourceCode].erase(destinationCode);
+        if (transforms_cache[sourceCode].size() == 0) {
+            transforms_cache.erase(sourceCode);
+        }
         return transform;
     }
 

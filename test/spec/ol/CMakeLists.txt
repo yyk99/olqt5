@@ -51,5 +51,6 @@ add_ol_test(tilegrid/tilegrid)
 
 #
 add_ol_test(proj/epsg3857)
+add_ol_test(proj/transforms)
 
 # end of file
