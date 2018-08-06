@@ -127,7 +127,7 @@ extern std::vector<ol::proj::ProjectionP> PROJECTIONS;
  * @param {number=} opt_dimension Dimension (default is `2`).
  * @return {Array.<number>} Output array of coordinate values.
  */
-OLQT_EXPORT std::vector<number_t> &fromEPSG4326(std::vector<number_t> const &input, std::vector<number_t> &output, int opt_dimension = 2);
+OLQT_EXPORT std::vector<number_t> &fromEPSG4326(std::vector<number_t> const &input, std::vector<number_t> &output, size_t opt_dimension = 2);
 
 inline std::vector<number_t> fromEPSG4326(std::vector<number_t> const &input)
 {

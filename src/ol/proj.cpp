@@ -247,6 +247,44 @@ void ol::proj::clearAllProjections()
     transforms::clear();
 }
 
+#include "./math.h"
+
+OLQT_EXPORT ol::coordinate::Coordinate ol::proj::toLonLat(ol::coordinate::Coordinate const &coordinate, 
+    ProjectionP opt_projection)
+{
+    auto lonLat = ol::proj::transform(coordinate, opt_projection != 0 ? opt_projection : ol::proj::getProjection("EPSG:3857"),
+        ol::proj::getProjection("EPSG:4326"));
+    auto lon = lonLat[0];
+    if (lon < -180 || lon > 180) {
+        lonLat[0] = ol::math::modulo(lon + 180, 360) - 180;
+    }
+    return lonLat;
+}
+
+
+/**
+* Checks if two projections are the same, that is every coordinate in one
+* projection does represent the same geographic point as the same coordinate in
+* the other projection.
+*
+* @param {module:ol/proj/Projection} projection1 Projection 1.
+* @param {module:ol/proj/Projection} projection2 Projection 2.
+* @return {boolean} Equivalent.
+* @api
+*/
+bool ol::proj::equivalent(ProjectionP projection1, ProjectionP projection2)
+{
+    if (projection1 == projection2) {
+        return true;
+    }
+    bool equalUnits = projection1->getUnits() == projection2->getUnits();
+    if (projection1->getCode() == projection2->getCode()) {
+        return equalUnits;
+    }
+
+    auto transformFunc = getTransformFromProjections(projection1, projection2);
+    return transformFunc == &cloneTransform && equalUnits;
+}
 
 /**
 * Searches in the list of transform functions for the function for converting

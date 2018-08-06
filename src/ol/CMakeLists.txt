@@ -226,6 +226,7 @@ set(OLQT_SRC
     ./proj/epsg3857.h
     ./proj/epsg4326.cpp
     ./proj/epsg4326.h
+    ./proj/proj4.cpp
     ./proj/proj4.h
     ./proj/Projection.cpp
     ./proj/Projection.h

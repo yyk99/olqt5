@@ -296,50 +296,37 @@ OLQT_EXPORT void clearAllProjections();
 //  return transform(coordinate, 'EPSG:4326',
 //    opt_projection !== undefined ? opt_projection : 'EPSG:3857');
 //}
-//
-//
-///**
-// * Transforms a coordinate to longitude/latitude.
-// * @param {module:ol/coordinate~Coordinate} coordinate Projected coordinate.
-// * @param {module:ol/proj~ProjectionLike=} opt_projection Projection of the coordinate.
-// *     The default is Web Mercator, i.e. 'EPSG:3857'.
-// * @return {module:ol/coordinate~Coordinate} Coordinate as longitude and latitude, i.e. an array
-// *     with longitude as 1st and latitude as 2nd element.
-// * @api
-// */
-//export function toLonLat(coordinate, opt_projection) {
-//  const lonLat = transform(coordinate,
-//    opt_projection !== undefined ? opt_projection : 'EPSG:3857', 'EPSG:4326');
-//  const lon = lonLat[0];
-//  if (lon < -180 || lon > 180) {
-//    lonLat[0] = modulo(lon + 180, 360) - 180;
-//  }
-//  return lonLat;
-//}
-//
-//
-///**
-// * Checks if two projections are the same, that is every coordinate in one
-// * projection does represent the same geographic point as the same coordinate in
-// * the other projection.
-// *
-// * @param {module:ol/proj/Projection} projection1 Projection 1.
-// * @param {module:ol/proj/Projection} projection2 Projection 2.
-// * @return {boolean} Equivalent.
-// * @api
-// */
-//export function equivalent(projection1, projection2) {
-//  if (projection1 === projection2) {
-//    return true;
-//  }
-//  const equalUnits = projection1.getUnits() === projection2.getUnits();
-//  if (projection1.getCode() === projection2.getCode()) {
-//    return equalUnits;
-//  } else {
-//    const transformFunc = getTransformFromProjections(projection1, projection2);
-//    return transformFunc === cloneTransform && equalUnits;
-//  }
-//}
+
+
+/**
+ * Transforms a coordinate to longitude/latitude.
+ * @param {module:ol/coordinate~Coordinate} coordinate Projected coordinate.
+ * @param {module:ol/proj~ProjectionLike=} opt_projection Projection of the coordinate.
+ *     The default is Web Mercator, i.e. 'EPSG:3857'.
+ * @return {module:ol/coordinate~Coordinate} Coordinate as longitude and latitude, i.e. an array
+ *     with longitude as 1st and latitude as 2nd element.
+ * @api
+ */
+OLQT_EXPORT ol::coordinate::Coordinate toLonLat(ol::coordinate::Coordinate const &coordinate, ProjectionP opt_projection);
+
+inline ol::coordinate::Coordinate toLonLat(ol::coordinate::Coordinate const &coordinate)
+{
+    return toLonLat(coordinate, ol::proj::getProjection("EPSG:3857"));
+}
+
+
+
+/**
+ * Checks if two projections are the same, that is every coordinate in one
+ * projection does represent the same geographic point as the same coordinate in
+ * the other projection.
+ *
+ * @param {module:ol/proj/Projection} projection1 Projection 1.
+ * @param {module:ol/proj/Projection} projection2 Projection 2.
+ * @return {boolean} Equivalent.
+ * @api
+ */
+OLQT_EXPORT bool equivalent(ProjectionP projection1, ProjectionP projection2);
 
 
 /**
@@ -386,6 +373,15 @@ OLQT_EXPORT TransformFunction getTransformFromProjections(ProjectionP sourceProj
  */
 OLQT_EXPORT ol::coordinate::Coordinate transform(ol::coordinate::Coordinate const &coordinate,
     ProjectionP source, ProjectionP destination);
+
+inline ol::coordinate::Coordinate transform(ol::coordinate::Coordinate const &coordinate,
+    ProjectionLike source, ProjectionLike destination)
+{
+    return transform(coordinate, getProjection(source), getProjection(destination));
+}
+
+//OLQT_EXPORT ol::coordinate::Coordinate transform(ol::coordinate::Coordinate const &coordinate,
+//    ProjectionP source, ProjectionP destination);
 
 /**
  * Transforms an extent from source projection to destination projection.  This

@@ -1,38 +1,42 @@
 #ifndef OL_MATH_H
 #define OL_MATH_H
 
+#include "dll_export.h"
 #include "jsport.h"
 
-///**
-// * @module ol/math
-// */
+#include <algorithm>
+#include <vector>
+
+/**
+ * @module ol/math
+ */
 //import {assert} from './asserts.js';
 #include "asserts.h"
-//
+
 namespace ol {
 namespace math {
-///**
-// * Takes a number and clamps it to within the provided bounds.
-// * @param {number} value The input number.
-// * @param {number} min The minimum value to return.
-// * @param {number} max The maximum value to return.
-// * @return {number} The input number if it is within bounds, or the nearest
-// *     number within the bounds.
-// */
-//export function clamp(value, min, max) {
-//  return Math.min(Math.max(value, min), max);
-//}
-//
-//
-///**
-// * Return the hyperbolic cosine of a given number. The method will use the
-// * native `Math.cosh` function if it is available, otherwise the hyperbolic
-// * cosine will be calculated via the reference implementation of the Mozilla
-// * developer network.
-// *
-// * @param {number} x X.
-// * @return {number} Hyperbolic cosine of x.
-// */
+/**
+ * Takes a number and clamps it to within the provided bounds.
+ * @param {number} value The input number.
+ * @param {number} min The minimum value to return.
+ * @param {number} max The maximum value to return.
+ * @return {number} The input number if it is within bounds, or the nearest
+ *     number within the bounds.
+ */
+inline ol::number_t clamp(number_t value, number_t min, number_t max)
+{
+    return std::min(std::max(value, min), max);
+}
+
+/**
+ * Return the hyperbolic cosine of a given number. The method will use the
+ * native `Math.cosh` function if it is available, otherwise the hyperbolic
+ * cosine will be calculated via the reference implementation of the Mozilla
+ * developer network.
+ *
+ * @param {number} x X.
+ * @return {number} Hyperbolic cosine of x.
+ */
 //export const cosh  = (function() {
 //  // Wrapped in a iife, to save the overhead of checking for the native
 //  // implementation on every invocation.
@@ -49,163 +53,113 @@ namespace math {
 //  }
 //  return cosh;
 //}());
-//
-//
-///**
-// * @param {number} x X.
-// * @return {number} The smallest power of two greater than or equal to x.
-// */
-//export function roundUpToPowerOfTwo(x) {
-//  assert(0 < x, 29); // `x` must be greater than `0`
-//  return Math.pow(2, Math.ceil(Math.log(x) / Math.LN2));
-//}
-//
-//
-///**
-// * Returns the square of the closest distance between the point (x, y) and the
-// * line segment (x1, y1) to (x2, y2).
-// * @param {number} x X.
-// * @param {number} y Y.
-// * @param {number} x1 X1.
-// * @param {number} y1 Y1.
-// * @param {number} x2 X2.
-// * @param {number} y2 Y2.
-// * @return {number} Squared distance.
-// */
-//export function squaredSegmentDistance(x, y, x1, y1, x2, y2) {
-//  const dx = x2 - x1;
-//  const dy = y2 - y1;
-//  if (dx !== 0 || dy !== 0) {
-//    const t = ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy);
-//    if (t > 1) {
-//      x1 = x2;
-//      y1 = y2;
-//    } else if (t > 0) {
-//      x1 += dx * t;
-//      y1 += dy * t;
-//    }
-//  }
-//  return squaredDistance(x, y, x1, y1);
-//}
-//
-//
-///**
-// * Returns the square of the distance between the points (x1, y1) and (x2, y2).
-// * @param {number} x1 X1.
-// * @param {number} y1 Y1.
-// * @param {number} x2 X2.
-// * @param {number} y2 Y2.
-// * @return {number} Squared distance.
-// */
-//export function squaredDistance(x1, y1, x2, y2) {
-//  const dx = x2 - x1;
-//  const dy = y2 - y1;
-//  return dx * dx + dy * dy;
-//}
-//
-//
-///**
-// * Solves system of linear equations using Gaussian elimination method.
-// *
-// * @param {Array.<Array.<number>>} mat Augmented matrix (n x n + 1 column)
-// *                                     in row-major order.
-// * @return {Array.<number>} The resulting vector.
-// */
-//export function solveLinearSystem(mat) {
-//  const n = mat.length;
-//
-//  for (let i = 0; i < n; i++) {
-//    // Find max in the i-th column (ignoring i - 1 first rows)
-//    let maxRow = i;
-//    let maxEl = Math.abs(mat[i][i]);
-//    for (let r = i + 1; r < n; r++) {
-//      const absValue = Math.abs(mat[r][i]);
-//      if (absValue > maxEl) {
-//        maxEl = absValue;
-//        maxRow = r;
-//      }
-//    }
-//
-//    if (maxEl === 0) {
-//      return null; // matrix is singular
-//    }
-//
-//    // Swap max row with i-th (current) row
-//    const tmp = mat[maxRow];
-//    mat[maxRow] = mat[i];
-//    mat[i] = tmp;
-//
-//    // Subtract the i-th row to make all the remaining rows 0 in the i-th column
-//    for (let j = i + 1; j < n; j++) {
-//      const coef = -mat[j][i] / mat[i][i];
-//      for (let k = i; k < n + 1; k++) {
-//        if (i == k) {
-//          mat[j][k] = 0;
-//        } else {
-//          mat[j][k] += coef * mat[i][k];
-//        }
-//      }
-//    }
-//  }
-//
-//  // Solve Ax=b for upper triangular matrix A (mat)
-//  const x = new Array(n);
-//  for (let l = n - 1; l >= 0; l--) {
-//    x[l] = mat[l][n] / mat[l][l];
-//    for (let m = l - 1; m >= 0; m--) {
-//      mat[m][n] -= mat[m][l] * x[l];
-//    }
-//  }
-//  return x;
-//}
-//
-//
-///**
-// * Converts radians to to degrees.
-// *
-// * @param {number} angleInRadians Angle in radians.
-// * @return {number} Angle in degrees.
-// */
-//export function toDegrees(angleInRadians) {
-//  return angleInRadians * 180 / Math.PI;
-//}
-//
-//
+
+
+const double LN2 = 0.69314718056;
+
+/**
+ * @param {number} x X.
+ * @return {number} The smallest power of two greater than or equal to x.
+ */
+inline number_t roundUpToPowerOfTwo(number_t x)
+{
+    ol::asserts::Assert(0 < x, 29); // `x` must be greater than `0`
+    return std::pow(2, std::ceil(std::log(x) / LN2));
+}
+
+
+/**
+ * Returns the square of the closest distance between the point (x, y) and the
+ * line segment (x1, y1) to (x2, y2).
+ * @param {number} x X.
+ * @param {number} y Y.
+ * @param {number} x1 X1.
+ * @param {number} y1 Y1.
+ * @param {number} x2 X2.
+ * @param {number} y2 Y2.
+ * @return {number} Squared distance.
+ */
+OLQT_EXPORT number_t squaredSegmentDistance(number_t x, number_t y, number_t x1, number_t y1, number_t x2, number_t y2);
+
+/**
+ * Returns the square of the distance between the points (x1, y1) and (x2, y2).
+ * @param {number} x1 X1.
+ * @param {number} y1 Y1.
+ * @param {number} x2 X2.
+ * @param {number} y2 Y2.
+ * @return {number} Squared distance.
+ */
+inline number_t squaredDistance(number_t x1, number_t y1, number_t x2, number_t y2)
+{
+    number_t dx = x2 - x1;
+    number_t dy = y2 - y1;
+    return dx * dx + dy * dy;
+}
+
+
+typedef std::vector<std::vector<number_t> > matrix_t;
+
+/**
+* Solves system of linear equations using Gaussian elimination method.
+*
+* @param {Array.<Array.<number>>} mat Augmented matrix (n x n + 1 column)
+*                                     in row-major order.
+* @return {Array.<number>} The resulting vector.
+*/
+OLQT_EXPORT std::vector<number_t> solveLinearSystem(matrix_t mat);
+
+const ol::number_t PI = 3.14159265358979323846;
+
+/**
+ * Converts radians to to degrees.
+ *
+ * @param {number} angleInRadians Angle in radians.
+ * @return {number} Angle in degrees.
+ */
+inline number_t toDegrees(number_t angleInRadians) 
+{
+  return angleInRadians * 180 / PI;
+}
+
+
 /**
  * Converts degrees to radians.
  *
  * @param {number} angleInDegrees Angle in degrees.
  * @return {number} Angle in radians.
  */
-
-const ol::number_t PI = 3.14159265358979323846;
-inline ol::number_t toRadians(ol::number_t angleInDegrees) {
+inline ol::number_t toRadians(ol::number_t angleInDegrees) 
+{
   return angleInDegrees * PI / 180;
 }
 
-///**
-// * Returns the modulo of a / b, depending on the sign of b.
-// *
-// * @param {number} a Dividend.
-// * @param {number} b Divisor.
-// * @return {number} Modulo.
-// */
-//export function modulo(a, b) {
-//  const r = a % b;
-//  return r * b < 0 ? r + b : r;
-//}
-//
-///**
-// * Calculates the linearly interpolated value of x between a and b.
-// *
-// * @param {number} a Number
-// * @param {number} b Number
-// * @param {number} x Value to be interpolated.
-// * @return {number} Interpolated value.
-// */
-//export function lerp(a, b, x) {
-//  return a + x * (b - a);
-//}
+/**
+ * Returns the modulo of a / b, depending on the sign of b.
+ *
+ * @param {number} a Dividend.
+ * @param {number} b Divisor.
+ * @return {number} Modulo.
+ */
+inline ol::number_t modulo(ol::number_t a, ol::number_t b)
+{
+    ol::number_t r = std::fmod(a, b);
+    return r * b < 0 ? r + b : r;
+}
+
+/**
+ * Calculates the linearly interpolated value of x between a and b.
+ *
+ * @param {number} a Number
+ * @param {number} b Number
+ * @param {number} x Value to be interpolated.
+ * @return {number} Interpolated value.
+ */
+inline number_t lerp(number_t a, number_t b, number_t x)
+{
+    return a + x * (b - a);
+}
+
 } // math
 } // namespace
+
 #endif // OL_MATH_H

@@ -162,7 +162,8 @@ public:
     /**
      * @return {boolean} The projection is suitable for wrapping the x-axis
      */
-    bool canWrapX() const {
+    bool canWrapX() const 
+    {
         return canWrapX_;
     }
 
@@ -171,7 +172,8 @@ public:
      * @return {string} Code.
      * @api
      */
-    std::string getCode() {
+    std::string getCode() const 
+    {
         return code_;
     }
 

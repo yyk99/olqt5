@@ -64,7 +64,7 @@ std::vector<ol::proj::ProjectionP> PROJECTIONS = {
 * @param {number=} opt_dimension Dimension (default is `2`).
 * @return {Array.<number>} Output array of coordinate values.
 */
-std::vector<number_t>& fromEPSG4326(std::vector<number_t> const & input, std::vector<number_t>& output, int opt_dimension)
+std::vector<number_t>& fromEPSG4326(std::vector<number_t> const & input, std::vector<number_t>& output, size_t opt_dimension)
 {
     auto length = input.size();
     auto dimension = opt_dimension > 1 ? opt_dimension : 2;
@@ -72,7 +72,7 @@ std::vector<number_t>& fromEPSG4326(std::vector<number_t> const & input, std::ve
     output.resize(length);
 
     auto halfSize = HALF_SIZE;
-    for (int i = 0; i < length; i += dimension) {
+    for (size_t i = 0; i < length; i += dimension) {
         output[i] = halfSize * input[i] / 180;
         auto y = RADIUS * std::log(std::tan(M_PI * (input[i + 1] + 90) / 360));
         if (y > halfSize) {
