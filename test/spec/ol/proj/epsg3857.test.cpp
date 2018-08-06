@@ -92,7 +92,7 @@ TEST_F(ol_proj_epsg3857, getPointResolution)
     //    it('returns the correct point scale at the latitude of Toronto',
     //      function() {
     {
-        //        // @see http://msdn.microsoft.com/en-us/library/aa940990.aspx
+        // @see http://msdn.microsoft.com/en-us/library/aa940990.aspx
         ProjectionP epsg3857 = getProjection("EPSG:3857");
         ASSERT_TRUE(epsg3857 != 0);
         ProjectionP epsg4326 = getProjection("EPSG:4326");
@@ -101,20 +101,33 @@ TEST_F(ol_proj_epsg3857, getPointResolution)
         ol::coordinate::Coordinate point = transform({ 0, 43.65 }, epsg4326, epsg3857);
         //        expect(getPointResolution(epsg3857, resolution, point)).
         //          to.roughlyEqual(19.11 * Math.cos(Math.PI * 43.65 / 180), 1e-9);
+        double expected = 19.11 * std::cos(M_PI * 43.65 / 180);
+        double actual = getPointResolution(epsg3857, resolution, point);
+        EXPECT_NEAR(expected, actual, 1e-9);
     }
     //      });
     //
     //    it('returns the correct point scale at various latitudes', function() {
-    //      // @see http://msdn.microsoft.com/en-us/library/aa940990.aspx
-    //      const epsg3857 = getProjection('EPSG:3857');
-    //      const epsg4326 = getProjection('EPSG:4326');
-    //      const resolution = 19.11;
-    //      let latitude;
-    //      for (latitude = 0; latitude <= 85; ++latitude) {
-    //        const point = transform([0, latitude], epsg4326, epsg3857);
-    //        expect(getPointResolution(epsg3857, resolution, point)).
-    //          to.roughlyEqual(19.11 * Math.cos(Math.PI * latitude / 180), 1e-9);
-    //      }
+    {
+        // @see http://msdn.microsoft.com/en-us/library/aa940990.aspx
+        //      const epsg3857 = getProjection('EPSG:3857');
+        ProjectionP epsg3857 = getProjection("EPSG:3857");
+        ASSERT_TRUE(epsg3857 != 0);
+        //      const epsg4326 = getProjection('EPSG:4326');
+        ProjectionP epsg4326 = getProjection("EPSG:4326");
+        ASSERT_TRUE(epsg4326 != 0);
+        ol::number_t resolution = 19.11;
+        //      let latitude;
+        for (ol::number_t latitude = 0; latitude <= 85; ++latitude) {
+            ol::coordinate::Coordinate point = transform({ 0, latitude }, epsg4326, epsg3857);
+            //expect(getPointResolution(epsg3857, resolution, point)).
+            //    to.roughlyEqual(19.11 * Math.cos(Math.PI * latitude / 180), 1e-9);
+
+            double expected = 19.11 * std::cos(M_PI * latitude / 180);
+            double actual = getPointResolution(epsg3857, resolution, point);
+            EXPECT_NEAR(expected, actual, 1e-9);
+        }
+    }
     //    });
     //
 }

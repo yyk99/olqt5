@@ -85,6 +85,20 @@ std::vector<number_t>& fromEPSG4326(std::vector<number_t> const & input, std::ve
     return output;
 }
 
+OLQT_EXPORT std::vector<ol::number_t> & toEPSG4326(std::vector<number_t> const &input, std::vector<number_t> &output, size_t opt_dimension)
+{
+    size_t length = input.size();
+    size_t dimension = opt_dimension > 1 ? opt_dimension : 2;
+    output.resize(input.size());
+
+    for (size_t i = 0; i < length; i += dimension) {
+        output[i] = 180 * input[i] / HALF_SIZE;
+        output[i + 1] = 360 * std::atan(
+            std::exp(input[i + 1] / RADIUS)) / M_PI - 90;
+    }
+    return output;
+}
+
 }
 }
 }

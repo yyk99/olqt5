@@ -137,34 +137,17 @@ inline std::vector<number_t> fromEPSG4326(std::vector<number_t> const &input)
     return r;
 }
 
-//
-///**
-// * Transformation from EPSG:3857 to EPSG:4326.
-// *
-// * @param {Array.<number>} input Input array of coordinate values.
-// * @param {Array.<number>=} opt_output Output array of coordinate values.
-// * @param {number=} opt_dimension Dimension (default is `2`).
-// * @return {Array.<number>} Output array of coordinate values.
-// */
-//export function toEPSG4326(input, opt_output, opt_dimension) {
-//  const length = input.length;
-//  const dimension = opt_dimension > 1 ? opt_dimension : 2;
-//  let output = opt_output;
-//  if (output === undefined) {
-//    if (dimension > 2) {
-//      // preserve values beyond second dimension
-//      output = input.slice();
-//    } else {
-//      output = new Array(length);
-//    }
-//  }
-//  for (let i = 0; i < length; i += dimension) {
-//    output[i] = 180 * input[i] / HALF_SIZE;
-//    output[i + 1] = 360 * Math.atan(
-//      Math.exp(input[i + 1] / RADIUS)) / Math.PI - 90;
-//  }
-//  return output;
-//}
+
+/**
+ * Transformation from EPSG:3857 to EPSG:4326.
+ *
+ * @param {Array.<number>} input Input array of coordinate values.
+ * @param {Array.<number>=} opt_output Output array of coordinate values.
+ * @param {number=} opt_dimension Dimension (default is `2`).
+ * @return {Array.<number>} Output array of coordinate values.
+ */
+OLQT_EXPORT std::vector<number_t> &toEPSG4326(std::vector<number_t> const &input, std::vector<number_t> &opt_output, size_t opt_dimension);
+
 }
 }
 }

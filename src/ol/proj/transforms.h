@@ -21,7 +21,8 @@ struct OLQT_EXPORT transforms {
      * @private
      * @type {!Object.<string, Object.<string, module:ol/proj~TransformFunction>>}
      */
-    static std::map<std::string, ol::proj::TransformFunction> transforms_cache;
+    typedef std::map<std::string, std::map<std::string, ol::proj::TransformFunction> > cache_t;
+    static cache_t transforms_cache;
 
     /**
      * Clear the transform cache.
@@ -40,17 +41,15 @@ struct OLQT_EXPORT transforms {
      * @param {module:ol/proj/Projection} destination Destination.
      * @param {module:ol/proj~TransformFunction} transformFn Transform.
      */
-    static void add(ProjectionP source, ProjectionP destination, void * transformFn)
+    static void add(ProjectionP source, ProjectionP destination, ol::proj::TransformFunction transformFn)
     {
         auto sourceCode = source->getCode();
         auto destinationCode = destination->getCode();
 
-        // TODO: implement
-
         //if (!(sourceCode in transforms)) {
         //    transforms[sourceCode] = {};
         //}
-        //transforms[sourceCode][destinationCode] = transformFn;
+        transforms_cache[sourceCode][destinationCode] = transformFn;
     }
 
 
@@ -83,13 +82,12 @@ struct OLQT_EXPORT transforms {
     * @param {string} destinationCode The code for the destination projection.
     * @return {module:ol/proj~TransformFunction|undefined} The transform function (if found).
     */
-    static ol::proj::TransformFunction get(std::string const &sourceCode, std::string const &destinationCode) 
+    static ol::proj::TransformFunction get(std::string const &sourceCode, std::string const &destinationCode)
     {
         ol::proj::TransformFunction transform = ol::proj::TransformFunction();
-        // TODO: implement
-        //if (sourceCode in transforms && destinationCode in transforms[sourceCode]) {
-        //    transform = transforms[sourceCode][destinationCode];
-        //}
+        if (transforms_cache.count(sourceCode) && transforms_cache[sourceCode].count(destinationCode)) {
+            transform = transforms_cache[sourceCode][destinationCode];
+        }
         return transform;
     }
 

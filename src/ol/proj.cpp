@@ -279,6 +279,31 @@ ol::coordinate::Coordinate ol::proj::transform(ol::coordinate::Coordinate const 
     return tmp;
 }
 
+
+#include "proj/epsg3857.h"
+#include "proj/epsg4326.h"
+
+using namespace ol;
+
+class FromEPSG4326 : public ol::proj::TransformFunctionObj {
+public:
+    virtual std::vector<number_t> & operator ()(std::vector<number_t> const &v1, std::vector<number_t> &v2, size_t s) override
+    {
+        return ol::proj::epsg3857::fromEPSG4326(v1, v2, s);
+    }
+};
+
+class ToEPSG4326 : public ol::proj::TransformFunctionObj {
+public:
+    virtual std::vector<number_t> & operator ()(std::vector<number_t> const &v1, std::vector<number_t> &v2, size_t dim) override
+    {
+        return ol::proj::epsg3857::toEPSG4326(v1, v2, dim);
+    }
+};
+
+FromEPSG4326 fromEPSG4326;
+ToEPSG4326 toEPSG4326;
+
 /**
 * Add transforms to and from EPSG:4326 and EPSG:3857.  This function is called
 * by when this module is executed and should only need to be called again after
@@ -292,5 +317,5 @@ void ol::proj::addCommon()
     addEquivalentProjections(ol::proj::epsg4326::PROJECTIONS /*EPSG4326_PROJECTIONS*/);
     // Add transformations to convert EPSG:4326 like coordinates to EPSG:3857 like
     // coordinates and back.
-    addEquivalentTransforms(ol::proj::epsg4326::PROJECTIONS, ol::proj::epsg3857::PROJECTIONS, 0 /*fromEPSG4326*/, 0 /*toEPSG4326*/);
+    addEquivalentTransforms(ol::proj::epsg4326::PROJECTIONS, ol::proj::epsg3857::PROJECTIONS, &fromEPSG4326, &toEPSG4326);
 }

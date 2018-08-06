@@ -6,5 +6,5 @@
 
 #include "transforms.h"
 
-std::map<std::string, ol::proj::TransformFunction> 
+ol::proj::transforms::cache_t
 ol::proj::transforms::transforms_cache;
