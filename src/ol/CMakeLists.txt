@@ -198,6 +198,7 @@ set(OLQT_SRC
     ./MapEvent.h
     ./MapEventType.h
     ./MapProperty.h
+    ./math.cpp
     ./math.h
     ./math_pi.h
     ./net.h
@@ -333,6 +334,7 @@ set(OLQT_SRC
     ./source/WMTSRequestEncoding.h
     ./source/XYZ.h
     ./source/Zoomify.h
+    ./sphere.cpp
     ./sphere.h
     ./string.cpp
     ./string.h

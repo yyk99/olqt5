@@ -39,6 +39,11 @@ public:
         first = T();
         second = false;
     }
+
+    bool operator == (optional<T> const &other) const
+    {
+        return first == other.first && second == other.second;
+    }
 };
 
 }

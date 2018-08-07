@@ -50,24 +50,25 @@ inline number_t getWidth(Extent const &extent);
 //  }
 //  return extent;
 //}
-//
-//
-///**
-// * @param {Array.<number>} xs Xs.
-// * @param {Array.<number>} ys Ys.
-// * @param {module:ol/extent~Extent=} opt_extent Destination extent.
-// * @private
-// * @return {module:ol/extent~Extent} Extent.
-// */
-//function _boundingExtentXYs(xs, ys, opt_extent) {
-//  const minX = Math.min.apply(null, xs);
-//  const minY = Math.min.apply(null, ys);
-//  const maxX = Math.max.apply(null, xs);
-//  const maxY = Math.max.apply(null, ys);
-//  return createOrUpdate(minX, minY, maxX, maxY, opt_extent);
-//}
-//
-//
+
+
+/**
+ * @param {Array.<number>} xs Xs.
+ * @param {Array.<number>} ys Ys.
+ * @param {module:ol/extent~Extent=} opt_extent Destination extent.
+ * @private
+ * @return {module:ol/extent~Extent} Extent.
+ */
+ /**
+ * @param {Array.<number>} xs Xs.
+ * @param {Array.<number>} ys Ys.
+ * @param {module:ol/extent~Extent=} opt_extent Destination extent.
+ * @private
+ * @return {module:ol/extent~Extent} Extent.
+ */
+OLQT_EXPORT Extent &_boundingExtentXYs(std::vector<number_t> const &xs, std::vector<number_t> const &ys, Extent &opt_extent);
+
+
 ///**
 // * Return extent increased by the provided value.
 // * @param {module:ol/extent~Extent} extent Extent.
@@ -242,6 +243,7 @@ inline Extent createOrUpdate(number_t minX, number_t minY, number_t maxX, number
 
 inline Extent &createOrUpdate(number_t minX, number_t minY, number_t maxX, number_t maxY, Extent &opt_extent) 
 {
+    opt_extent.resize(4);
     opt_extent[0] = minX;
     opt_extent[1] = minY;
     opt_extent[2] = maxX;
@@ -678,7 +680,6 @@ inline number_t getWidth(Extent const &extent)
     return extent[2] - extent[0];
 }
 
-
 ///**
 // * Determine if one extent intersects another.
 // * @param {module:ol/extent~Extent} extent1 Extent 1.
@@ -791,29 +792,27 @@ inline number_t getWidth(Extent const &extent)
 //  }
 //  return intersects;
 //}
-//
-//
-///**
-// * Apply a transform function to the extent.
-// * @param {module:ol/extent~Extent} extent Extent.
-// * @param {module:ol/proj~TransformFunction} transformFn Transform function.
-// * Called with `[minX, minY, maxX, maxY]` extent coordinates.
-// * @param {module:ol/extent~Extent=} opt_extent Destination extent.
-// * @return {module:ol/extent~Extent} Extent.
-// * @api
-// */
-//export function applyTransform(extent, transformFn, opt_extent) {
-//  const coordinates = [
-//    extent[0], extent[1],
-//    extent[0], extent[3],
-//    extent[2], extent[1],
-//    extent[2], extent[3]
-//  ];
-//  transformFn(coordinates, coordinates, 2);
-//  const xs = [coordinates[0], coordinates[2], coordinates[4], coordinates[6]];
-//  const ys = [coordinates[1], coordinates[3], coordinates[5], coordinates[7]];
-//  return _boundingExtentXYs(xs, ys, opt_extent);
-//}
+
+
+/**
+ * Apply a transform function to the extent.
+ * @param {module:ol/extent~Extent} extent Extent.
+ * @param {module:ol/proj~TransformFunction} transformFn Transform function.
+ * Called with `[minX, minY, maxX, maxY]` extent coordinates.
+ * @param {module:ol/extent~Extent=} opt_extent Destination extent.
+ * @return {module:ol/extent~Extent} Extent.
+ * @api
+ */
+OLQT_EXPORT ol::extent::Extent &applyTransform(Extent const &extent, ol::proj::TransformFunction transformFn, Extent &opt_extent);
+
+inline ol::extent::Extent applyTransform(Extent const &extent, ol::proj::TransformFunction transformFn)
+{
+    Extent opt_extent;
+
+    return applyTransform(extent, transformFn, opt_extent);
+    return opt_extent;
+}
+
 }
 }
 

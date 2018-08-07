@@ -11,12 +11,63 @@
 //import Projection from './Projection.js';
 #include "./Projection.h"
 
+#include "../optional.h"
 #include "../dll_export.h"
 
 namespace ol {
 namespace proj {
 
-struct OLQT_EXPORT proj4 {
+struct OLQT_EXPORT proj4 
+{
+    struct Proj4 {
+        struct projection_def 
+        {
+            std::string axis;
+            std::string units;
+            optional<number_t> to_meter;
+
+            inline bool operator == (projection_def const &other) const {
+                return axis == other.axis &&
+                    units == other.units &&
+                    to_meter == other.to_meter;
+            }
+        };
+
+        struct transform_def {
+            void *forward;
+            void *inverse;
+
+            transform_def() : forward(), inverse() {}
+        };
+
+        struct defs_container {
+            std::map<std::string, projection_def> _container;
+            std::vector<std::string> keys() const
+            {
+                std::vector<std::string> r;
+                for (auto const &p : _container)
+                    r.push_back(p.first);
+                return r;
+            }
+
+            inline projection_def const & operator() (std::string const &key) const 
+            {
+                return _container.at(key);
+            }
+
+            inline projection_def const &operator[] (std::string const &key) const
+            {
+                return operator()(key);
+            }
+        };
+
+        defs_container defs;
+
+        transform_def operator() (std::string const &c1, std::string const &c2) const
+        {
+            return transform_def();
+        }
+    };
 
     /**
      * Make projections defined in proj4 (with `proj4.defs()`) available in
@@ -29,39 +80,7 @@ struct OLQT_EXPORT proj4 {
      * @param {?} proj4 Proj4.
      * @api
      */
-    //export function register(proj4) {
-    //  const projCodes = Object.keys(proj4.defs);
-    //  const len = projCodes.length;
-    //  let i, j;
-    //  for (i = 0; i < len; ++i) {
-    //    const code = projCodes[i];
-    //    if (!get(code)) {
-    //      const def = proj4.defs(code);
-    //      addProjection(new Projection({
-    //        code: code,
-    //        axisOrientation: def.axis,
-    //        metersPerUnit: def.to_meter,
-    //        units: def.units
-    //      }));
-    //    }
-    //  }
-    //  for (i = 0; i < len; ++i) {
-    //    const code1 = projCodes[i];
-    //    const proj1 = get(code1);
-    //    for (j = 0; j < len; ++j) {
-    //      const code2 = projCodes[j];
-    //      const proj2 = get(code2);
-    //      if (!getTransform(code1, code2)) {
-    //        if (proj4.defs[code1] === proj4.defs[code2]) {
-    //          addEquivalentProjections([proj1, proj2]);
-    //        } else {
-    //          const transform = proj4(code1, code2);
-    //          addCoordinateTransforms(proj1, proj2, transform.forward, transform.inverse);
-    //        }
-    //      }
-    //    }
-    //  }
-    //}
+    static void  Register(Proj4 const &proj4);
 };
 }
 }

@@ -83,6 +83,11 @@ public:
         optional<bool> global;
         optional<number_t> metersPerUnit;
         std::string axisOrientation;
+
+        Options() {};
+        Options(std::string const &c, bool g) : code(c), global(g) {}
+        Options(std::string const &c, bool g, ol::extent::Extent const &e)
+            : code(c), global(g), extent(e) {}
     };
 
     Projection(Options const &options)
@@ -101,44 +106,44 @@ public:
 
         //  this.units_ = /** @type {module:ol/proj/Units} */ (options.units);
 
-                /**
-                 * Validity extent of the projection in projected coordinates. For projections
-                 * with `TILE_PIXELS` units, this is the extent of the tile in
-                 * tile pixel space.
-                 * @private
-                 * @type {module:ol/extent~Extent}
-                 */
-                 //  this.extent_ = options.extent !== undefined ? options.extent : null;
-                 //
-                   /**
-                    * Extent of the world in EPSG:4326. For projections with
-                    * `TILE_PIXELS` units, this is the extent of the tile in
-                    * projected coordinate space.
-                    * @private
-                    * @type {module:ol/extent~Extent}
-                    */
-                    //  this.worldExtent_ = options.worldExtent !== undefined ?
-                    //    options.worldExtent : null;
-                    //
-                      /**
-                       * @private
-                       * @type {string}
-                       */
-                       //  this.axisOrientation_ = options.axisOrientation !== undefined ?
-                       //    options.axisOrientation : 'enu';
-                       //
-                       //  /**
-                       //   * @private
-                       //   * @type {boolean}
-                       //   */
-                       //  this.global_ = options.global !== undefined ? options.global : false;
-                       //
-                       //  /**
-                       //   * @private
-                       //   * @type {boolean}
-                       //   */
-                       //  this.canWrapX_ = !!(this.global_ && this.extent_);
-        canWrapX_ = !(global_ && extent_.size());
+        /**
+        * Validity extent of the projection in projected coordinates. For projections
+        * with `TILE_PIXELS` units, this is the extent of the tile in
+        * tile pixel space.
+        * @private
+        * @type {module:ol/extent~Extent}
+        */
+        //  this.extent_ = options.extent !== undefined ? options.extent : null;
+        //
+        /**
+        * Extent of the world in EPSG:4326. For projections with
+        * `TILE_PIXELS` units, this is the extent of the tile in
+        * projected coordinate space.
+        * @private
+        * @type {module:ol/extent~Extent}
+        */
+        //  this.worldExtent_ = options.worldExtent !== undefined ?
+        //    options.worldExtent : null;
+        //
+        /**
+        * @private
+        * @type {string}
+        */
+        //  this.axisOrientation_ = options.axisOrientation !== undefined ?
+        //    options.axisOrientation : 'enu';
+        //
+        //  /**
+        //   * @private
+        //   * @type {boolean}
+        //   */
+        //  this.global_ = options.global !== undefined ? options.global : false;
+        //
+        //  /**
+        //   * @private
+        //   * @type {boolean}
+        //   */
+        //  this.canWrapX_ = !!(this.global_ && this.extent_);
+        canWrapX_ = (global_ && (extent_.size() != 0));
         //
         //  /**
         //   * @private
@@ -146,17 +151,17 @@ public:
         //   */
         //  this.getPointResolutionFunc_ = options.getPointResolution;
 
-          /**
-           * @private
-           * @type {module:ol/tilegrid/TileGrid}
-           */
-           //  this.defaultTileGrid_ = null;
+        /**
+        * @private
+        * @type {module:ol/tilegrid/TileGrid}
+        */
+        //  this.defaultTileGrid_ = null;
 
-             /**
-              * @private
-              * @type {number|undefined}
-              */
-              //  this.metersPerUnit_ = options.metersPerUnit;
+        /**
+        * @private
+        * @type {number|undefined}
+        */
+        //  this.metersPerUnit_ = options.metersPerUnit;
     }
 
     /**
@@ -238,29 +243,31 @@ public:
     //Projection.prototype.getAxisOrientation = function() {
     //  return this.axisOrientation_;
     //};
-    //
-    //
-    ///**
-    // * Is this projection a global projection which spans the whole world?
-    // * @return {boolean} Whether the projection is global.
-    // * @api
-    // */
-    //Projection.prototype.isGlobal = function() {
-    //  return this.global_;
-    //};
-    //
-    //
-    ///**
-    //* Set if the projection is a global projection which spans the whole world
-    //* @param {boolean} global Whether the projection is global.
-    //* @api
-    //*/
-    //Projection.prototype.setGlobal = function(global) {
-    //  this.global_ = global;
-    //  this.canWrapX_ = !!(global && this.extent_);
-    //};
-    //
-    //
+    
+    
+    /**
+     * Is this projection a global projection which spans the whole world?
+     * @return {boolean} Whether the projection is global.
+     * @api
+     */
+    bool isGlobal() const
+    {
+        return global_;
+    }
+    
+    
+    /**
+    * Set if the projection is a global projection which spans the whole world
+    * @param {boolean} global Whether the projection is global.
+    * @api
+    */
+    void setGlobal(bool global)
+    {
+        global_ = global;
+        canWrapX_ = (global && extent_.size());
+    }
+    
+    
     ///**
     // * @return {module:ol/tilegrid/TileGrid} The default tile grid.
     // */
@@ -275,31 +282,31 @@ public:
     //Projection.prototype.setDefaultTileGrid = function(tileGrid) {
     //  this.defaultTileGrid_ = tileGrid;
     //};
-    //
-    //
-    ///**
-    // * Set the validity extent for this projection.
-    // * @param {module:ol/extent~Extent} extent Extent.
-    // * @api
-    // */
-    //Projection.prototype.setExtent = function(extent) {
-    //  this.extent_ = extent;
-    //  this.canWrapX_ = !!(this.global_ && extent);
-    //};
-    //
-    //
-    ///**
-    // * Set the world extent for this projection.
-    // * @param {module:ol/extent~Extent} worldExtent World extent
-    // *     [minlon, minlat, maxlon, maxlat].
-    // * @api
-    // */
-    //Projection.prototype.setWorldExtent = function(worldExtent) {
-    //  this.worldExtent_ = worldExtent;
-    //};
-    //
-    //
-
+    
+    
+    /**
+     * Set the validity extent for this projection.
+     * @param {module:ol/extent~Extent} extent Extent.
+     * @api
+     */
+    void setExtent(ol::extent::Extent const &extent)
+    {
+        extent_ = extent;
+        canWrapX_ = global_ && (extent.size() != 0);
+    }
+    
+ 
+    /**
+     * Set the world extent for this projection.
+     * @param {module:ol/extent~Extent} worldExtent World extent
+     *     [minlon, minlat, maxlon, maxlat].
+     * @api
+     */
+    void setWorldExtent(ol::extent::Extent const &worldExtent)
+    {
+        worldExtent_ = worldExtent;
+    }
+    
     ///**
     // * Set the getPointResolution function (see {@link module:ol/proj~getPointResolution}
     // * for this projection.
@@ -309,8 +316,8 @@ public:
     //Projection.prototype.setGetPointResolution = function(func) {
     //  this.getPointResolutionFunc_ = func;
     //};
-    //
-    //
+    
+    
     /**
      * Get the custom point resolution function for this projection (if set).
      * @return {function(number, module:ol/coordinate~Coordinate):number|undefined} The custom point

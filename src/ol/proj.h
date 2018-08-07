@@ -63,44 +63,9 @@
  */
 #include "dll_export.h"
 
-namespace ol {
-namespace proj {
-
-/**
-* A projection as {@link module:ol/proj/Projection}, SRS identifier
-* string or undefined.
-* @typedef {module:ol/proj/Projection|string|undefined} ProjectionLike
-* @api
-*/
-
-typedef std::string ProjectionLike;
-
-/**
-* A transform function accepts an array of input coordinate values, an optional
-* output array, and an optional dimension (default should be 2).  The function
-* transforms the input coordinate values, populates the output array, and
-* returns the output array.
-*
-* @typedef {function(Array.<number>, Array.<number>=, number=): Array.<number>} TransformFunction
-* @api
-*/
-
-#if 1
-class TransformFunctionObj {
-public:
-    virtual std::vector<number_t> & operator ()(std::vector<number_t> const &, std::vector<number_t> &, size_t) = 0;
-};
-
-typedef TransformFunctionObj *TransformFunction;
-
-#else
-typedef void *TransformFunction;
-#endif
-
-}
-}
  //import {getDistance} from './sphere.js';
 //import {applyTransform} from './extent.js';
+#include "./extent.h"
 //import {modulo} from './math.js';
 //import {toEPSG4326, fromEPSG4326, PROJECTIONS as EPSG3857_PROJECTIONS} from './proj/epsg3857.js';
 //import {PROJECTIONS as EPSG4326_PROJECTIONS} from './proj/epsg4326.js';
@@ -171,8 +136,13 @@ inline ProjectionP getProjection(ProjectionLike projectionLike)
  * @return {number} Point resolution.
  * @api
  */
-number_t OLQT_EXPORT getPointResolution(ProjectionP projection, number_t resolution, ol::coordinate::Coordinate const &point/*, std::string const &opt_units*/);
+number_t OLQT_EXPORT getPointResolution(ProjectionP projection, number_t resolution, ol::coordinate::Coordinate const &point, std::string const &opt_units = std::string());
 
+inline number_t getPointResolution(ProjectionLike const &projection, number_t resolution, 
+    ol::coordinate::Coordinate const &point, std::string const &opt_units = std::string())
+{
+    return getPointResolution(getProjection(projection), resolution, point, opt_units);
+}
 
 /**
  * Registers transformation functions that don't alter coordinates. Those allow
@@ -222,80 +192,84 @@ OLQT_EXPORT void clearAllProjections();
 //    );
 //  }
 //}
-//
-//
-///**
-// * Creates a {@link module:ol/proj~TransformFunction} from a simple 2D coordinate transform
-// * function.
-// * @param {function(module:ol/coordinate~Coordinate): module:ol/coordinate~Coordinate} coordTransform Coordinate
-// *     transform.
-// * @return {module:ol/proj~TransformFunction} Transform function.
-// */
-//export function createTransformFromCoordinateTransform(coordTransform) {
-//  return (
-//    /**
-//     * @param {Array.<number>} input Input.
-//     * @param {Array.<number>=} opt_output Output.
-//     * @param {number=} opt_dimension Dimension.
-//     * @return {Array.<number>} Output.
-//     */
-//    function(input, opt_output, opt_dimension) {
-//      const length = input.length;
-//      const dimension = opt_dimension !== undefined ? opt_dimension : 2;
-//      const output = opt_output !== undefined ? opt_output : new Array(length);
-//      for (let i = 0; i < length; i += dimension) {
-//        const point = coordTransform([input[i], input[i + 1]]);
-//        output[i] = point[0];
-//        output[i + 1] = point[1];
-//        for (let j = dimension - 1; j >= 2; --j) {
-//          output[i + j] = input[i + j];
-//        }
-//      }
-//      return output;
-//    });
-//}
-//
-//
-///**
-// * Registers coordinate transform functions to convert coordinates between the
-// * source projection and the destination projection.
-// * The forward and inverse functions convert coordinate pairs; this function
-// * converts these into the functions used internally which also handle
-// * extents and coordinate arrays.
-// *
-// * @param {module:ol/proj~ProjectionLike} source Source projection.
-// * @param {module:ol/proj~ProjectionLike} destination Destination projection.
-// * @param {function(module:ol/coordinate~Coordinate): module:ol/coordinate~Coordinate} forward The forward transform
-// *     function (that is, from the source projection to the destination
-// *     projection) that takes a {@link module:ol/coordinate~Coordinate} as argument and returns
-// *     the transformed {@link module:ol/coordinate~Coordinate}.
-// * @param {function(module:ol/coordinate~Coordinate): module:ol/coordinate~Coordinate} inverse The inverse transform
-// *     function (that is, from the destination projection to the source
-// *     projection) that takes a {@link module:ol/coordinate~Coordinate} as argument and returns
-// *     the transformed {@link module:ol/coordinate~Coordinate}.
-// * @api
-// */
-//export function addCoordinateTransforms(source, destination, forward, inverse) {
-//  const sourceProj = get(source);
-//  const destProj = get(destination);
-//  addTransformFunc(sourceProj, destProj, createTransformFromCoordinateTransform(forward));
-//  addTransformFunc(destProj, sourceProj, createTransformFromCoordinateTransform(inverse));
-//}
-//
-//
-///**
-// * Transforms a coordinate from longitude/latitude to a different projection.
-// * @param {module:ol/coordinate~Coordinate} coordinate Coordinate as longitude and latitude, i.e.
-// *     an array with longitude as 1st and latitude as 2nd element.
-// * @param {module:ol/proj~ProjectionLike=} opt_projection Target projection. The
-// *     default is Web Mercator, i.e. 'EPSG:3857'.
-// * @return {module:ol/coordinate~Coordinate} Coordinate projected to the target projection.
-// * @api
-// */
-//export function fromLonLat(coordinate, opt_projection) {
-//  return transform(coordinate, 'EPSG:4326',
-//    opt_projection !== undefined ? opt_projection : 'EPSG:3857');
-//}
+
+
+/**
+ * Creates a {@link module:ol/proj~TransformFunction} from a simple 2D coordinate transform
+ * function.
+ * @param {function(module:ol/coordinate~Coordinate): module:ol/coordinate~Coordinate} coordTransform Coordinate
+ *     transform.
+ * @return {module:ol/proj~TransformFunction} Transform function.
+ */
+inline TransformFunction createTransformFromCoordinateTransform(void *coordTransform)
+{
+#if 1
+    return 0;
+#else
+    return (
+        /**
+         * @param {Array.<number>} input Input.
+         * @param {Array.<number>=} opt_output Output.
+         * @param {number=} opt_dimension Dimension.
+         * @return {Array.<number>} Output.
+         */
+        function(input, opt_output, opt_dimension) {
+        const length = input.length;
+        const dimension = opt_dimension != = undefined ? opt_dimension : 2;
+        const output = opt_output != = undefined ? opt_output : new Array(length);
+        for (let i = 0; i < length; i += dimension) {
+            const point = coordTransform([input[i], input[i + 1]]);
+            output[i] = point[0];
+            output[i + 1] = point[1];
+            for (let j = dimension - 1; j >= 2; --j) {
+                output[i + j] = input[i + j];
+            }
+        }
+        return output;
+    });
+#endif
+}
+
+
+/**
+ * Registers coordinate transform functions to convert coordinates between the
+ * source projection and the destination projection.
+ * The forward and inverse functions convert coordinate pairs; this function
+ * converts these into the functions used internally which also handle
+ * extents and coordinate arrays.
+ *
+ * @param {module:ol/proj~ProjectionLike} source Source projection.
+ * @param {module:ol/proj~ProjectionLike} destination Destination projection.
+ * @param {function(module:ol/coordinate~Coordinate): module:ol/coordinate~Coordinate} forward The forward transform
+ *     function (that is, from the source projection to the destination
+ *     projection) that takes a {@link module:ol/coordinate~Coordinate} as argument and returns
+ *     the transformed {@link module:ol/coordinate~Coordinate}.
+ * @param {function(module:ol/coordinate~Coordinate): module:ol/coordinate~Coordinate} inverse The inverse transform
+ *     function (that is, from the destination projection to the source
+ *     projection) that takes a {@link module:ol/coordinate~Coordinate} as argument and returns
+ *     the transformed {@link module:ol/coordinate~Coordinate}.
+ * @api
+ */
+OLQT_EXPORT void  addCoordinateTransforms(ProjectionLike const &source, ProjectionLike const &destination, void *forward, void *inverse);
+
+OLQT_EXPORT void  addCoordinateTransforms(ProjectionP source, ProjectionP dest, void *forward, void *inverse);
+
+/**
+ * Transforms a coordinate from longitude/latitude to a different projection.
+ * @param {module:ol/coordinate~Coordinate} coordinate Coordinate as longitude and latitude, i.e.
+ *     an array with longitude as 1st and latitude as 2nd element.
+ * @param {module:ol/proj~ProjectionLike=} opt_projection Target projection. The
+ *     default is Web Mercator, i.e. 'EPSG:3857'.
+ * @return {module:ol/coordinate~Coordinate} Coordinate projected to the target projection.
+ * @api
+ */
+OLQT_EXPORT ol::coordinate::Coordinate fromLonLat(ol::coordinate::Coordinate const &coordinate, 
+    ProjectionLike const &opt_projection);
+
+inline ol::coordinate::Coordinate fromLonLat(ol::coordinate::Coordinate const &coordinate)
+{
+    return fromLonLat(coordinate, "EPSG:3857");
+}
 
 
 /**
@@ -341,21 +315,17 @@ OLQT_EXPORT bool equivalent(ProjectionP projection1, ProjectionP projection2);
 OLQT_EXPORT TransformFunction getTransformFromProjections(ProjectionP sourceProjection, ProjectionP destinationProjection);
 
 
-///**
-// * Given the projection-like objects, searches for a transformation
-// * function to convert a coordinates array from the source projection to the
-// * destination projection.
-// *
-// * @param {module:ol/proj~ProjectionLike} source Source.
-// * @param {module:ol/proj~ProjectionLike} destination Destination.
-// * @return {module:ol/proj~TransformFunction} Transform function.
-// * @api
-// */
-//export function getTransform(source, destination) {
-//  const sourceProjection = get(source);
-//  const destinationProjection = get(destination);
-//  return getTransformFromProjections(sourceProjection, destinationProjection);
-//}
+/**
+ * Given the projection-like objects, searches for a transformation
+ * function to convert a coordinates array from the source projection to the
+ * destination projection.
+ *
+ * @param {module:ol/proj~ProjectionLike} source Source.
+ * @param {module:ol/proj~ProjectionLike} destination Destination.
+ * @return {module:ol/proj~TransformFunction} Transform function.
+ * @api
+ */
+OLQT_EXPORT ol::proj::TransformFunction getTransform(ProjectionLike const &source, ProjectionLike const &destination);
 
 /**
  * Transforms a coordinate from source projection to destination projection.
@@ -393,12 +363,13 @@ inline ol::coordinate::Coordinate transform(ol::coordinate::Coordinate const &co
  * @return {module:ol/extent~Extent} The transformed extent.
  * @api
  */
-//export function transformExtent(extent, source, destination) {
-//  const transformFunc = getTransform(source, destination);
-//  return applyTransform(extent, transformFunc);
-//}
-//
-//
+inline ol::extent::Extent transformExtent(ol::extent::Extent const &extent, ProjectionLike const &source, ProjectionLike const &destination)
+{
+    auto transformFunc = getTransform(source, destination);
+    return ol::extent::applyTransform(extent, transformFunc);
+}
+
+
 ///**
 // * Transforms the given point to the destination projection.
 // *

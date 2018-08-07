@@ -66,6 +66,7 @@ std::vector<ol::number_t> &ol::proj::CloneTransform::operator()(std::vector<ol::
     //} else {
     //    output = input.slice();
     //}
+    opt_output = input;
     return opt_output;
 }
 
@@ -133,7 +134,8 @@ ol::proj::ProjectionP ol::proj::get(ProjectionLike projectionLike)
     return projections::get(projectionLike);
 }
 
-
+//import {getDistance} from './sphere.js';
+#include "./sphere.h"
 
 /**
 * Get the resolution of the point in degrees or distance units.
@@ -155,45 +157,41 @@ ol::proj::ProjectionP ol::proj::get(ProjectionLike projectionLike)
 * @return {number} Point resolution.
 * @api
 */
-ol::number_t ol::proj::getPointResolution(ProjectionP projection, number_t resolution, ol::coordinate::Coordinate const & point)
+ol::number_t ol::proj::getPointResolution(ProjectionP projection, number_t resolution, 
+    ol::coordinate::Coordinate const &point, std::string const &opt_units)
 {
-#if 1
-    return projection->getPointResolution(resolution, point).value();
-#else
-    projection = get(projection);
-    let pointResolution;
-    const getter = projection.getPointResolutionFunc();
-    if (getter) {
-        pointResolution = getter(resolution, point);
+    ol::number_t pointResolution;
+    auto getter = projection->getPointResolution(resolution, point);
+    if (getter.has_value()) {
+        pointResolution = getter.value();
     } else {
-        const units = projection.getUnits();
-        if (units == Units.DEGREES && !opt_units || opt_units == Units.DEGREES) {
+        auto units = projection->getUnits();
+        if (units == Units::DEGREES && opt_units.empty() || opt_units == Units::DEGREES) {
             pointResolution = resolution;
         } else {
             // Estimate point resolution by transforming the center pixel to EPSG:4326,
             // measuring its width and height on the normal sphere, and taking the
             // average of the width and height.
-            const toEPSG4326 = getTransformFromProjections(projection, get('EPSG:4326'));
-            let vertices = [
+            auto toEPSG4326 = getTransformFromProjections(projection, get("EPSG:4326"));
+            std::vector<number_t> vertices = {
                 point[0] - resolution / 2, point[1],
-                    point[0] + resolution / 2, point[1],
-                    point[0], point[1] - resolution / 2,
-                    point[0], point[1] + resolution / 2
-            ];
-            vertices = toEPSG4326(vertices, vertices, 2);
-            const width = getDistance(vertices.slice(0, 2), vertices.slice(2, 4));
-            const height = getDistance(vertices.slice(4, 6), vertices.slice(6, 8));
+                point[0] + resolution / 2, point[1],
+                point[0], point[1] - resolution / 2,
+                point[0], point[1] + resolution / 2
+            };
+            vertices = (*toEPSG4326)(vertices, vertices, 2);
+            number_t width = ol::sphere::getDistance({ vertices[0], vertices[1] }, { vertices[2], vertices[3] });
+            number_t height = ol::sphere::getDistance({ vertices[4], vertices[5] }, { vertices[6], vertices[7] });
             pointResolution = (width + height) / 2;
-            const metersPerUnit = opt_units ?
+            number_t metersPerUnit = opt_units.size() ?
                 METERS_PER_UNIT[opt_units] :
-                projection.getMetersPerUnit();
-            if (metersPerUnit != = undefined) {
+                projection->getMetersPerUnit();
+            if (metersPerUnit) {
                 pointResolution /= metersPerUnit;
             }
         }
     }
     return pointResolution;
-#endif
 }
 
 /**
@@ -247,9 +245,23 @@ void ol::proj::clearAllProjections()
     transforms::clear();
 }
 
+/**
+* Transforms a coordinate from longitude/latitude to a different projection.
+* @param {module:ol/coordinate~Coordinate} coordinate Coordinate as longitude and latitude, i.e.
+*     an array with longitude as 1st and latitude as 2nd element.
+* @param {module:ol/proj~ProjectionLike=} opt_projection Target projection. The
+*     default is Web Mercator, i.e. 'EPSG:3857'.
+* @return {module:ol/coordinate~Coordinate} Coordinate projected to the target projection.
+* @api
+*/
+OLQT_EXPORT ol::coordinate::Coordinate ol::proj::fromLonLat(ol::coordinate::Coordinate const & coordinate, ProjectionLike const & opt_projection)
+{
+    return transform(coordinate, "EPSG:4326", opt_projection);
+}
+
 #include "./math.h"
 
-OLQT_EXPORT ol::coordinate::Coordinate ol::proj::toLonLat(ol::coordinate::Coordinate const &coordinate, 
+OLQT_EXPORT ol::coordinate::Coordinate ol::proj::toLonLat(ol::coordinate::Coordinate const &coordinate,
     ProjectionP opt_projection)
 {
     auto lonLat = ol::proj::transform(coordinate, opt_projection != 0 ? opt_projection : ol::proj::getProjection("EPSG:3857"),
@@ -308,6 +320,23 @@ ol::proj::TransformFunction ol::proj::getTransformFromProjections(ProjectionP so
     return transformFunc;
 }
 
+/**
+* Given the projection-like objects, searches for a transformation
+* function to convert a coordinates array from the source projection to the
+* destination projection.
+*
+* @param {module:ol/proj~ProjectionLike} source Source.
+* @param {module:ol/proj~ProjectionLike} destination Destination.
+* @return {module:ol/proj~TransformFunction} Transform function.
+* @api
+*/
+ol::proj::TransformFunction ol::proj::getTransform(ProjectionLike const & source, ProjectionLike const & destination)
+{
+    auto sourceProjection = get(source);
+    auto destinationProjection = get(destination);
+    return getTransformFromProjections(sourceProjection, destinationProjection);
+}
+
 ol::coordinate::Coordinate ol::proj::transform(ol::coordinate::Coordinate const &coordinate, ProjectionP source, ProjectionP destination)
 {
     auto transformFunc = ol::proj::transforms::get/*Transform*/(source, destination);
@@ -356,4 +385,18 @@ void ol::proj::addCommon()
     // Add transformations to convert EPSG:4326 like coordinates to EPSG:3857 like
     // coordinates and back.
     addEquivalentTransforms(ol::proj::epsg4326::PROJECTIONS, ol::proj::epsg3857::PROJECTIONS, &fromEPSG4326, &toEPSG4326);
+}
+
+void  ol::proj::addCoordinateTransforms(ProjectionLike const &source, ProjectionLike const &destination, void *forward, void *inverse)
+{
+    auto sourceProj = get(source);
+    auto destProj = get(destination);
+    ol::proj::transforms::add/*TransformFunc*/(sourceProj, destProj, createTransformFromCoordinateTransform(forward));
+    ol::proj::transforms::add/*TransformFunc*/(destProj, sourceProj, createTransformFromCoordinateTransform(inverse));
+}
+
+void  ol::proj::addCoordinateTransforms(ProjectionP source, ProjectionP dest, void *forward, void *inverse)
+{
+    ol::proj::transforms::add/*TransformFunc*/(source, dest, createTransformFromCoordinateTransform(forward));
+    ol::proj::transforms::add/*TransformFunc*/(dest, source, createTransformFromCoordinateTransform(inverse));
 }
