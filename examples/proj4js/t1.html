@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Proj4sj test1</title>
+    <script src="proj4-src.js"></script>
+  </head>
+  <body>
+    <div id="console_output"></div>
+<script>
+    //
+    // Simple page to play coordinate transformation
+    //
+
+function console_write_line(str)
+{
+    var target = document.getElementById('console_output');
+    if (target) {
+        target.innerText += '\n' + str;
+    }
+}
+
+console_write_line("Hello, there");
+
+var firstProjection = 'PROJCS["NAD83 / Massachusetts Mainland",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101,AUTHORITY["EPSG","7019"]],AUTHORITY["EPSG","6269"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4269"]],UNIT["metre",1,AUTHORITY["EPSG","9001"]],PROJECTION["Lambert_Conformal_Conic_2SP"],PARAMETER["standard_parallel_1",42.68333333333333],PARAMETER["standard_parallel_2",41.71666666666667],PARAMETER["latitude_of_origin",41],PARAMETER["central_meridian",-71.5],PARAMETER["false_easting",200000],PARAMETER["false_northing",750000],AUTHORITY["EPSG","26986"],AXIS["X",EAST],AXIS["Y",NORTH]]';
+var secondProjection = "+proj=gnom +lat_0=90 +lon_0=0 +x_0=6300000 +y_0=6300000 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
+//I'm not going to redefine those two in latter examples.
+{
+    var res = proj4(firstProjection,secondProjection,[2,5]);
+    // [-2690666.2977344505, 3662659.885459918]
+    console_write_line(res);
+}
+
+{
+    // The Netherlands
+    // http://spatialreference.org/ref/epsg/amersfoort-rd-new/
+    var res = proj4(proj4.defs.WGS84, proj4.defs['EPSG:28992'], [3.3700, 50.7500]);
+    console_write_line(res);
+    console_write_line("Should be: " + [12628.0541, 308179.0423]);
+}
+
+{
+    // test case for Northern See project
+    
+    var thirdProjection = 'PROJCS["ED_1950_UTM_Zone_31N",GEOGCS["GCS_European_1950",DATUM["D_European_1950",SPHEROID["International_1924",6378388.0,297.0]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",3.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0],AUTHORITY["EPSG",23031]]';
+    
+    var res = proj4(thirdProjection, proj4.defs.WGS84, [450634.76, 6782083.64]);
+    console_write_line(res);
+    console_write_line("Should be: " + [2.08190009, 61.16868250]);
+}
+
+{
+    // test case for Northern See project (2)
+    
+    proj4.defs['EPSG:23031'] = 'PROJCS["ED_1950_UTM_Zone_31N",GEOGCS["GCS_European_1950",DATUM["D_European_1950",SPHEROID["International_1924",6378388.0,297.0]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",3.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0],AUTHORITY["EPSG",23031]]';
+    
+    var res = proj4(proj4.defs['EPSG:23031'], proj4.defs.WGS84, [450634.76, 6782083.64]);
+    console_write_line(res);
+    console_write_line("Should be: " + [2.08190009, 61.16868250]);
+}
+
+// proj4.def("EPSG:23031", "+proj=utm +zone=31 +ellps=intl +units=m +no_defs");
+{
+    // test case for Northern See project (3)
+    
+    console_write_line("Case 3");
+
+    proj4.defs('case_3', "+proj=utm +zone=31 +ellps=intl +units=m +no_defs");
+
+//    defs["case_3"] = "+proj=utm +zone=31 +ellps=intl +units=m +no_defs";
+    
+    
+    var coord = [
+        [ 451199.854599822, 6780362.88986858 ],
+        [ 451199.854599822, 6787888.32076943 ],
+        [ 460557.47902881, 6787888.32076943 ],
+        [ 460557.47902881, 6780362.88986858 ],
+        [ 451199.854599822, 6780362.88986858 ]
+    ];
+    
+    for (i = 0 ; i < 5 ; ++i) {
+        res = proj4(proj4.defs['case_3'], proj4.defs.WGS84, coord[i]);
+        console_write_line(res);
+    }
+}
+
+
+</script>
+</body>
+</html>
+

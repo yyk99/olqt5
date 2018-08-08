@@ -399,6 +399,10 @@ set(OLQT_SRC
 )
 
 add_library(olqt SHARED ${OLQT_SRC})
+target_link_libraries(olqt PUBLIC
+    proj_wrapper
+)
+
 set_target_properties(olqt PROPERTIES FOLDER "src")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/.. FILES ${OLQT_SRC})
 

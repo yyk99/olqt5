@@ -97,6 +97,7 @@ public:
         , global_(options.global.value_or(false))
         , worldExtent_(options.worldExtent)
         , axisOrientation_(options.axisOrientation.empty() ? "enu" : options.axisOrientation)
+        , metersPerUnit_(options.metersPerUnit)
     {
         /**
         * @private

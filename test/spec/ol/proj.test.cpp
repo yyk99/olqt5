@@ -480,50 +480,101 @@ TEST_F(ol_proj, getPointResolution)
     //  });
 }
 
-//  describe('Proj4js integration', function() {
-TEST_F(ol_proj, proj4js)
+class ol_proj4js : public ::testing::Test {
+public:
+    ol_proj4js()
+    {}
+
+    virtual void SetUp() override
+    {
+        //    afterEach(function() {
+        //      delete proj4.defs['EPSG:21781'];
+        //      clearAllProjections();
+        //      addCommon();
+        //    });
+        ol::proj::proj4::proj4.defs.erase("EPSG:21781");
+        ol::proj::clearAllProjections();
+        ol::proj::addCommon();
+    }
+};
+
+TEST_F(ol_proj4js, integration_1)
 {
-    ASSERT_TRUE(false) << "Not implemented yet";
-    //
-    //    afterEach(function() {
-    //      delete proj4.defs['EPSG:21781'];
-    //      clearAllProjections();
-    //      addCommon();
-    //    });
-    //
+    using namespace ol::proj;
+
     //    it('creates ol.proj.Projection instance from EPSG:21781', function() {
-    //      proj4.defs('EPSG:21781',
-    //        '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 ' +
-    //          '+k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel ' +
-    //          '+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs');
-    //      register(proj4);
-    //      const proj = getProjection('EPSG:21781');
-    //      expect(proj.getCode()).to.eql('EPSG:21781');
-    //      expect(proj.getUnits()).to.eql('m');
-    //      expect(proj.getMetersPerUnit()).to.eql(1);
+    {
+        //      proj4.defs('EPSG:21781',
+        //        '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 ' +
+        //          '+k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel ' +
+        //          '+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs');
+        ol::proj::proj4::proj4.defs("EPSG:21781",
+            "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 " \
+            "+k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel " \
+            "+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs");
+
+        proj4::Register(ol::proj::proj4::proj4);
+        //      const proj = getProjection('EPSG:21781');
+        //      expect(proj.getCode()).to.eql('EPSG:21781');
+        //      expect(proj.getUnits()).to.eql('m');
+        //      expect(proj.getMetersPerUnit()).to.eql(1);
+        auto proj = getProjection("EPSG:21781");
+        ASSERT_TRUE(proj != 0);
+        EXPECT_EQ("EPSG:21781", proj->getCode());
+        EXPECT_EQ("m", proj->getUnits());
+        EXPECT_EQ(1, proj->getMetersPerUnit());
+    }
     //    });
-    //
+}
+
+TEST_F(ol_proj4js, integration_2)
+{
+    using namespace ol::proj;
+
     //    it('creates ol.proj.Projection instance from EPSG:3739', function() {
-    //      proj4.defs('EPSG:3739',
-    //        '+proj=tmerc +lat_0=40.5 +lon_0=-110.0833333333333 +k=0.9999375 ' +
-    //          '+x_0=800000.0000101599 +y_0=99999.99998983997 +ellps=GRS80 ' +
-    //          '+towgs84=0,0,0,0,0,0,0 +units=us-ft +no_defs');
-    //      register(proj4);
-    //      const proj = getProjection('EPSG:3739');
-    //      expect(proj.getCode()).to.eql('EPSG:3739');
-    //      expect(proj.getUnits()).to.eql('us-ft');
-    //      expect(proj.getMetersPerUnit()).to.eql(1200 / 3937);
-    //
-    //      delete proj4.defs['EPSG:3739'];
-    //    });
-    //
-    //    it('allows Proj4js projections to be used transparently', function() {
-    //      register(proj4);
-    //      const point = transform(
-    //        [-626172.13571216376, 6887893.4928337997], 'GOOGLE', 'WGS84');
-    //      expect(point[0]).to.roughlyEqual(-5.625, 1e-9);
-    //      expect(point[1]).to.roughlyEqual(52.4827802220782, 1e-9);
-    //    });
+    {
+        //      proj4.defs('EPSG:3739',
+        //        '+proj=tmerc +lat_0=40.5 +lon_0=-110.0833333333333 +k=0.9999375 ' +
+        //          '+x_0=800000.0000101599 +y_0=99999.99998983997 +ellps=GRS80 ' +
+        //          '+towgs84=0,0,0,0,0,0,0 +units=us-ft +no_defs');
+        ol::proj::proj4::proj4.defs("EPSG:3739",
+            "+proj=tmerc +lat_0=40.5 +lon_0=-110.0833333333333 +k=0.9999375 " \
+            "+x_0=800000.0000101599 +y_0=99999.99998983997 +ellps=GRS80 " \
+            "+towgs84=0,0,0,0,0,0,0 +units=us-ft +no_defs");
+        proj4::Register(ol::proj::proj4::proj4);
+        //      const proj = getProjection('EPSG:3739');
+        //      expect(proj.getCode()).to.eql('EPSG:3739');
+        //      expect(proj.getUnits()).to.eql('us-ft');
+        //      expect(proj.getMetersPerUnit()).to.eql(1200 / 3937);
+        //
+        auto proj = getProjection("EPSG:3739");
+        ASSERT_TRUE(proj != 0);
+        EXPECT_EQ("EPSG:3739", proj->getCode());
+        EXPECT_EQ("us-ft", proj->getUnits());
+        EXPECT_EQ(1200.0 / 3937.0, proj->getMetersPerUnit());
+        ol::proj::proj4::proj4.defs.erase("EPSG:3739");
+    }
+}
+
+TEST_F(ol_proj4js, integration_3)
+{
+    using namespace ol::proj;
+    // it('allows Proj4js projections to be used transparently', function() {
+    {
+        // register(proj4);
+        proj4::Register(ol::proj::proj4::proj4);
+        auto point = transform(
+            { -626172.13571216376, 6887893.4928337997 }, "GOOGLE", "WGS84");
+
+        // expect(point[0]).to.roughlyEqual(-5.625, 1e-9);
+        EXPECT_NEAR(-5.625, point[0], 1e-9);
+        // expect(point[1]).to.roughlyEqual(52.4827802220782, 1e-9);
+        EXPECT_NEAR(52.4827802220782, point[1], 1e-9);
+    }
+}
+
+TEST_F(ol_proj4js, integration_4)
+{
     //
     //    it('allows new Proj4js projections to be defined', function() {
     //      proj4.defs('EPSG:21781',
@@ -536,6 +587,10 @@ TEST_F(ol_proj, proj4js)
     //      expect(point[0]).to.roughlyEqual(600072.300, 1);
     //      expect(point[1]).to.roughlyEqual(200146.976, 1);
     //    });
+}
+
+TEST_F(ol_proj4js, integration_5)
+{
     //
     //    it('works with ol.proj.fromLonLat and ol.proj.toLonLat', function() {
     //      proj4.defs('EPSG:21781',
@@ -551,6 +606,9 @@ TEST_F(ol_proj, proj4js)
     //      expect(point[0]).to.roughlyEqual(lonLat[0], 1);
     //      expect(point[1]).to.roughlyEqual(lonLat[1], 1);
     //    });
+}
+TEST_F(ol_proj4js, integration_6)
+{
     //
     //    it('caches the new Proj4js projections given their srsCode', function() {
     //      proj4.defs('EPSG:21781',
@@ -566,6 +624,9 @@ TEST_F(ol_proj, proj4js)
     //      expect(equivalent(proj2, proj)).to.be(true);
     //      delete proj4.defs[code];
     //    });
+}
+TEST_F(ol_proj4js, integration_7)
+{
     //
     //    it('numerically estimates point scale at the equator', function() {
     //      register(proj4);
@@ -614,8 +675,21 @@ TEST_F(ol_proj, proj4js)
     //  });
 }
 
+class ol_reg_proj4 : public ::testing::Test {
+public:
+    ol_reg_proj4()
+    {}
+
+    virtual void SetUp() override
+    {
+        ol::proj::clearAllProjections();
+        ol::proj::addCommon();
+        ol::proj::proj4::Register(ol::proj::proj4::proj4);
+    }
+};
+
 //  describe('ol.proj.getTransformFromProjections()', function() {
-TEST_F(ol_proj, getTransformFromProjections)
+TEST_F(ol_reg_proj4, getTransformFromProjections)
 {
     //
     //    beforeEach(function() {
@@ -650,7 +724,7 @@ TEST_F(ol_proj, getTransformFromProjections)
 //  });
 //
 //  describe('ol.proj.getTransform()', function() {
-TEST_F(ol_proj, getTransform)
+TEST_F(ol_reg_proj4, getTransform)
 {
     EXPECT_TRUE(false) << "Not implemented yet";
     //
@@ -731,10 +805,8 @@ TEST_F(ol_proj, getTransform)
 }
 //
 //  describe('ol.proj.transform()', function() {
-TEST_F(ol_proj, transform)
+TEST_F(ol_reg_proj4, transform)
 {
-    EXPECT_TRUE(false) << "Not implemented yet";
-}
 //
 //    it('transforms a 2d coordinate', function() {
 //      const got = transform([-10, -20], 'EPSG:4326', 'EPSG:3857');
@@ -779,74 +851,139 @@ TEST_F(ol_proj, transform)
 //    });
 //
 //  });
-//
-//  describe('ol.proj.Projection.prototype.getMetersPerUnit()', function() {
-TEST_F(ol_proj, getMetersPerUnit)
-{
     EXPECT_TRUE(false) << "Not implemented yet";
 }
 
+class ol_reg_proj4_custom : public ::testing::Test {
+public:
+    ol_reg_proj4_custom()
+    {}
+
+    virtual void SetUp() override
+    {
+        //    afterEach(function() {
+        //      delete proj4.defs['EPSG:26782'];
+        //      delete proj4.defs['EPSG:3739'];
+        //      delete proj4.defs['EPSG:4269'];
+        //      delete proj4.defs['EPSG:4279'];
+        //      clearAllProjections();
+        //      addCommon();
+        //    });
+
+        ol::proj::proj4::proj4.defs.erase("EPSG:26782");
+        ol::proj::proj4::proj4.defs.erase("EPSG:3739");
+        ol::proj::proj4::proj4.defs.erase("EPSG:4269");
+        ol::proj::proj4::proj4.defs.erase("EPSG:4279");
+
+        ol::proj::clearAllProjections();
+        ol::proj::addCommon();
+#if 0
+            beforeEach(function() {
+              proj4.defs('EPSG:26782',
+                '+proj=lcc +lat_1=29.3 +lat_2=30.7 +lat_0=28.66666666666667 ' +
+                  '+lon_0=-91.33333333333333 +x_0=609601.2192024384 +y_0=0 ' +
+                  '+ellps=clrk66 +datum=NAD27 +to_meter=0.3048006096012192 +no_defs');
+              proj4.defs('EPSG:3739', '+proj=tmerc +lat_0=40.5 ' +
+                  '+lon_0=-110.0833333333333 +k=0.9999375 +x_0=800000.0000101599 ' +
+                  '+y_0=99999.99998983997 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 ' +
+                  '+units=us-ft +no_defs');
+              proj4.defs('EPSG:4269', 'GEOGCS["NAD83",' +
+                  'DATUM["North_American_Datum_1983",' +
+                  'SPHEROID["GRS 1980",6378137,298.257222101,' +
+                  'AUTHORITY["EPSG","7019"]],' +
+                  'AUTHORITY["EPSG","6269"]],' +
+                  'PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],' +
+                  'UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],' +
+                  'AUTHORITY["EPSG","4269"]]');
+              proj4.defs('EPSG:4279', 'GEOGCS["OS(SN)80",DATUM["OS_SN_1980",' +
+                  'SPHEROID["Airy 1830",6377563.396,299.3249646,' +
+                  'AUTHORITY["EPSG","7001"]],' +
+                  'AUTHORITY["EPSG","6279"]],' +
+                  'PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],' +
+                  'UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],' +
+                  'AUTHORITY["EPSG","4279"]]');
+              register(proj4);
+            });
+#endif
+        ol::proj::proj4::proj4.defs("EPSG:26782",
+            "proj=lcc +lat_1=29.3 +lat_2=30.7 +lat_0=28.66666666666667 " \
+            "+lon_0=-91.33333333333333 +x_0=609601.2192024384 +y_0=0 " \
+            "+ellps=clrk66 +datum=NAD27 +to_meter=0.3048006096012192 +no_defs");
+        ol::proj::proj4::proj4.defs("EPSG:3739", "+proj=tmerc +lat_0=40.5 " \
+            "+lon_0=-110.0833333333333 +k=0.9999375 +x_0=800000.0000101599 " \
+            "+y_0=99999.99998983997 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 " \
+            "+units=us-ft +no_defs");
+#if 0
+        ol::proj::proj4::proj4.defs("EPSG:4269", "GEOGCS[\"NAD83\"," \
+            "DATUM[\"North_American_Datum_1983\"," \
+            "SPHEROID[\"GRS 1980\",6378137,298.257222101," \
+            "AUTHORITY[\"EPSG\", \"7019\"]]," \
+            "AUTHORITY[\"EPSG\",\"6269\"]]," \
+            "PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]]," \
+            "UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]]," \
+            "AUTHORITY[\"EPSG\",\"4269\"]]");
+        ol::proj::proj4::proj4.defs("EPSG:4279", "GEOGCS[\"OS(SN)80\",DATUM[\"OS_SN_1980\"," \
+            "SPHEROID[\"Airy 1830\",6377563.396,299.3249646," \
+            "AUTHORITY[\"EPSG\",\"7001\"]]," \
+            "AUTHORITY[\"EPSG\",\"6279\"]]," \
+            "PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]]," \
+            "UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]]," \
+            "AUTHORITY[\"EPSG\",\"4279\"]]");
+#else
+        ol::proj::proj4::proj4.defs("EPSG:4269", "+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs");
+        ol::proj::proj4::proj4.defs("EPSG:4279", "+proj=longlat +ellps=airy +no_defs");
+#endif
+        ol::proj::proj4::Register(ol::proj::proj4::proj4);
+    }
+};
+
 //
-//    beforeEach(function() {
-//      proj4.defs('EPSG:26782',
-//        '+proj=lcc +lat_1=29.3 +lat_2=30.7 +lat_0=28.66666666666667 ' +
-//          '+lon_0=-91.33333333333333 +x_0=609601.2192024384 +y_0=0 ' +
-//          '+ellps=clrk66 +datum=NAD27 +to_meter=0.3048006096012192 +no_defs');
-//      proj4.defs('EPSG:3739', '+proj=tmerc +lat_0=40.5 ' +
-//          '+lon_0=-110.0833333333333 +k=0.9999375 +x_0=800000.0000101599 ' +
-//          '+y_0=99999.99998983997 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 ' +
-//          '+units=us-ft +no_defs');
-//      proj4.defs('EPSG:4269', 'GEOGCS["NAD83",' +
-//          'DATUM["North_American_Datum_1983",' +
-//          'SPHEROID["GRS 1980",6378137,298.257222101,' +
-//          'AUTHORITY["EPSG","7019"]],' +
-//          'AUTHORITY["EPSG","6269"]],' +
-//          'PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],' +
-//          'UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],' +
-//          'AUTHORITY["EPSG","4269"]]');
-//      proj4.defs('EPSG:4279', 'GEOGCS["OS(SN)80",DATUM["OS_SN_1980",' +
-//          'SPHEROID["Airy 1830",6377563.396,299.3249646,' +
-//          'AUTHORITY["EPSG","7001"]],' +
-//          'AUTHORITY["EPSG","6279"]],' +
-//          'PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],' +
-//          'UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],' +
-//          'AUTHORITY["EPSG","4279"]]');
-//      register(proj4);
-//    });
-//
-//    afterEach(function() {
-//      delete proj4.defs['EPSG:26782'];
-//      delete proj4.defs['EPSG:3739'];
-//      delete proj4.defs['EPSG:4269'];
-//      delete proj4.defs['EPSG:4279'];
-//      clearAllProjections();
-//      addCommon();
-//    });
-//
+//  describe('ol.proj.Projection.prototype.getMetersPerUnit()', function() {
+TEST_F(ol_reg_proj4_custom, getMetersPerUnit)
+{
+    using namespace ol::proj;
+
 //    it('returns value in meters', function() {
-//      const epsg4326 = getProjection('EPSG:4326');
-//      expect(epsg4326.getMetersPerUnit()).to.eql(METERS_PER_UNIT);
+    {
+        auto epsg4326 = getProjection("EPSG:4326");
+        ASSERT_TRUE(epsg4326 != 0);
+        //      expect(epsg4326.getMetersPerUnit()).to.eql(METERS_PER_UNIT);
+        EXPECT_EQ(METERS_PER_UNIT["degrees"], epsg4326->getMetersPerUnit());
+    }
 //    });
 //
 //    it('works for proj4js projections without units', function() {
-//      const epsg26782 = getProjection('EPSG:26782');
-//      expect(epsg26782.getMetersPerUnit()).to.eql(0.3048006096012192);
+    {
+        auto epsg26782 = getProjection("EPSG:26782");
+        ASSERT_TRUE(epsg26782 != 0);
+        //      expect(epsg26782.getMetersPerUnit()).to.eql(0.3048006096012192);
+        EXPECT_EQ(0.3048006096012192, epsg26782->getMetersPerUnit());
+    }
 //    });
 //
 //    it('works for proj4js projections with units other than m', function() {
-//      const epsg3739 = getProjection('EPSG:3739');
-//      expect(epsg3739.getMetersPerUnit()).to.eql(1200 / 3937);
+    {
+        auto epsg3739 = getProjection("EPSG:3739");
+        ASSERT_TRUE(epsg3739 != 0);
+        EXPECT_EQ(1200.0 / 3937.0, epsg3739->getMetersPerUnit());
+    }
 //    });
 //
 //    it('works for proj4js OGC WKT GEOGCS projections', function() {
-//      const epsg4269 = getProjection('EPSG:4269');
-//      expect(epsg4269.getMetersPerUnit()).to.eql(
-//        6378137 * 0.01745329251994328);
-//      const epsg4279 = getProjection('EPSG:4279');
-//      expect(epsg4279.getMetersPerUnit()).to.eql(
-//        6377563.396 * 0.01745329251994328);
+    {
+       auto epsg4269 = getProjection("EPSG:4269");
+       ASSERT_TRUE(epsg4269 != 0);
+        //      expect(epsg4269.getMetersPerUnit()).to.eql(
+        //        6378137 * 0.01745329251994328);
+       EXPECT_NEAR(6378137 * 0.01745329251994328, epsg4269->getMetersPerUnit(), 1e-9);
+       auto epsg4279 = getProjection("EPSG:4279");
+       ASSERT_TRUE(epsg4279 != 0);
+        //      expect(epsg4279.getMetersPerUnit()).to.eql(
+        //        6377563.396 * 0.01745329251994328);
+       EXPECT_NEAR(6377563.396 * 0.01745329251994328, epsg4279->getMetersPerUnit(), 1e-9);
+    }
 //    });
-//
 //  });
+}
 //
 //});
