@@ -49,7 +49,7 @@ TEST(ol_TileCache, t1)
         //      });
 
         for (auto tile : tiles) {
-            cache.set(ol::tilecoord::getKey(tile.tileCoord()), tile);
+            cache.set(ol::tilecoord::getKey(tile.tileCoord), tile);
         }
 
         //

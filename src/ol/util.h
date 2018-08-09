@@ -4,6 +4,8 @@
 #include "dll_export.h"
 
 #include <string>
+#include <memory>
+#include <stdint.h>
 
 namespace ol {
 namespace util {
@@ -39,12 +41,18 @@ namespace util {
 //  childCtor.prototype.constructor = childCtor;
 //}
 
-///**
-// * Counter for getUid.
-// * @type {number}
-// * @private
-// */
-//let uidCounter_ = 0;
+class OLQT_EXPORT Uid {
+public:
+    /**
+     * Counter for getUid.
+     * @type {number}
+     * @private
+     */
+    static uint64_t uidCounter_ /*= 0*/;
+
+    uint64_t ol_uid;
+    Uid() : ol_uid() {}
+};
   
 /**
 * Gets a unique ID for an object. This mutates the object so that further calls
@@ -54,12 +62,23 @@ namespace util {
 * @param {Object} obj The object to get the unique ID for.
 * @return {number} The unique ID for the object.
 */
-inline int getUid(void *obj) 
+inline uint64_t getUid(Uid &obj) 
 {
-    throw std::runtime_error("not implemented");
-//     return obj.ol_uid || (obj.ol_uid = ++uidCounter_);
+    if (obj.ol_uid == 0)
+        obj.ol_uid = ++Uid::uidCounter_;
+    return obj.ol_uid;
 }
-  
+
+inline uint64_t getUid(Uid *obj)
+{
+    return getUid(*obj);
+}
+
+inline uint64_t getUid(std::shared_ptr<Uid> obj)
+{
+    return getUid(obj.get());
+}
+
 /**
 * OpenLayers version.
 * @type {string}

@@ -148,6 +148,7 @@ set(OLQT_SRC
     ./ImageBase.h
     ./ImageCanvas.h
     ./ImageState.h
+    ./ImageTile.cpp
     ./ImageTile.h
     ./index.cpp
     ./index.h

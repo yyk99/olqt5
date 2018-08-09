@@ -1,20 +1,21 @@
 #ifndef OL_EVENTS_EVENTTYPE_H
 #define OL_EVENTS_EVENTTYPE_H
 
+/**
+* @module ol/events/EventType
+*/
+
 #include <string>
 
 #include "../dll_export.h"
 
 namespace ol {
 namespace events {
-///**
-// * @module ol/events/EventType
-// */
-//
-///**
-// * @enum {string}
-// * @const
-// */
+
+/**
+ * @enum {string}
+ * @const
+ */
 
 struct EventType {
     typedef std::string _type;

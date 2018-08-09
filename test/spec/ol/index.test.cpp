@@ -5,32 +5,30 @@
 
 TEST(ol_index, getUid)
 {
-    return; // TODO: Implement
-
     //describe('getUid()', function() {
     //  it('is constant once generated', function() {
     {
         //    const a = {};
-        void *a = 0;
-        EXPECT_NO_THROW(ol::util::getUid(a));
-        //    expect(getUid(a)).to.be(getUid(a));
+        ol::util::Uid a;
+        EXPECT_EQ(getUid(a), getUid(a));
     }
     //  });
     //
     //  it('generates a strictly increasing sequence', function() {
     {
         //    const a = {};
+        ol::util::Uid a;
         //    const b = {};
+        ol::util::Uid b;
         //    const c = {};
-        //    getUid(a);
-        //    getUid(c);
-        //    getUid(b);
+        ol::util::Uid c;
+        getUid(a);
+        getUid(c);
+        getUid(b);
         //
         //    //uid order should be a < c < b
-        //    expect(getUid(a)).to.be.lessThan(getUid(c));
-        //    expect(getUid(c)).to.be.lessThan(getUid(b));
-        //    expect(getUid(a)).to.be.lessThan(getUid(b));
+        EXPECT_TRUE(getUid(a) < getUid(c));
+        EXPECT_TRUE(getUid(c) < getUid(b));
+        EXPECT_TRUE(getUid(a) < getUid(b));
     }
-    //  });
-    //});
 }
