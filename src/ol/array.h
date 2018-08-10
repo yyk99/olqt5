@@ -21,33 +21,33 @@ namespace array {
 * @param {Function=} opt_comparator Comparator function.
 * @return {number} The index of the item if found, -1 if not.
 */
-//export function binarySearch(haystack, needle, opt_comparator) {
-//  let mid, cmp;
-//  const comparator = opt_comparator || numberSafeCompareFunction;
-//  let low = 0;
-//  let high = haystack.length;
-//  let found = false;
-//
-//  while (low < high) {
-//    /* Note that "(low + high) >>> 1" may overflow, and results in a typecast
-//     * to double (which gives the wrong results). */
-//    mid = low + (high - low >> 1);
-//    cmp = +comparator(haystack[mid], needle);
-//
-//    if (cmp < 0.0) { /* Too low. */
-//      low  = mid + 1;
-//
-//    } else { /* Key found or too high */
-//      high = mid;
-//      found = !cmp;
-//    }
-//  }
-//
-//  /* Key not found. */
-//  return found ? low : ~low;
-//}
-//
-//
+template<typename T, typename F>
+int binarySearch(std::vector<T> const &haystack, T const &needle, F comparator)
+{
+  int mid, cmp;
+  int low = 0;
+  int high = int(haystack.size());
+  bool found = false;
+
+  while (low < high) {
+      /* Note that "(low + high) >>> 1" may overflow, and results in a typecast
+       * to double (which gives the wrong results). */
+      mid = low + ((high - low) >> 1);
+      cmp = comparator(haystack[mid], needle);
+
+      if (cmp < 0) { /* Too low. */
+          low = mid + 1;
+      } else { /* Key found or too high */
+          high = mid;
+          found = !cmp;
+      }
+  }
+
+  /* Key not found. */
+  return found ? low : ~low;
+}
+
+
 /**
  * Compare function for array sort that is safe for numbers.
  * @param {*} a The first object to be compared.
@@ -62,6 +62,17 @@ int numberSafeCompareFunction(T const &a, T const &b)
 }
 
 
+template<typename T>
+int binarySearch(std::vector<T> const &haystack, T const &needle)
+{
+    return binarySearch<T, int(T const &, T const &)>(haystack, needle, numberSafeCompareFunction);
+}
+
+template<typename T, typename T1>
+int binarySearch(std::vector<T> const &haystack, T1 const &needle)
+{
+    return binarySearch<T>(haystack, T(needle));
+}
 
 /**
  * Whether the array contains the given object.
