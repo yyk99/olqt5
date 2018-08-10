@@ -1,13 +1,18 @@
 #include <gtest/gtest.h>
 
 //import ImageTile from '../../../src/ol/ImageTile.js';
+#include "../../../src/ol/ImageTile.h"
 //import Tile from '../../../src/ol/Tile.js';
 //import TileQueue from '../../../src/ol/TileQueue.js';
+#include "../../../src/ol/TileQueue.h"
 //import TileState from '../../../src/ol/TileState.js';
+#include "../../../src/ol/TileState.h"
 //import {defaultImageLoadFunction} from '../../../src/ol/source/Image.js';
+#include "../../../src/ol/source/Image.h"
 //import {DROP} from '../../../src/ol/structs/PriorityQueue.js';
-//
-//
+#include "../../../src/ol/structs/PriorityQueue.h"
+
+
 //describe('ol.TileQueue', function() {
 //
 //  function addRandomPriorityTiles(tq, num) {

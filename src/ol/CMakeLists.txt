@@ -307,6 +307,7 @@ set(OLQT_SRC
     ./source/CartoDB.h
     ./source/Cluster.h
     ./source/common.h
+    ./source/Image.cpp
     ./source/Image.h
     ./source/ImageArcGISRest.h
     ./source/ImageCanvas.h
@@ -342,6 +343,7 @@ set(OLQT_SRC
     ./structs/LinkedList.h
     ./structs/LRUCache.cpp
     ./structs/LRUCache.h
+    ./structs/PriorityQueue.cpp
     ./structs/PriorityQueue.h
     ./structs/RBush.h
     ./style.h
