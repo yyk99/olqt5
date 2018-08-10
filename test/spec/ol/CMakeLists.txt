@@ -44,6 +44,7 @@ add_ol_test(tile)
 add_ol_test(tilecache)
 add_ol_test(tilecoord)
 add_ol_test(tilerange)
+add_ol_test(tilequeue)
 add_ol_test(uri)
 add_ol_test(vectortile)
 
