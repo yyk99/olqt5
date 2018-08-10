@@ -8,7 +8,11 @@
 
 #include <cmath>
 
-ol::tilecoord::TileCoord ol::tilegrid::TileGrid::getTileCoordForXYAndZ_(ol::number_t x, ol::number_t y, int z, bool reverseIntersectionPolicy/*, opt_tileCoord*/)
+using namespace ol::tilecoord;
+using namespace ol::tilegrid;
+
+TileCoord TileGrid::getTileCoordForXYAndZ_(ol::number_t x, ol::number_t y, tilecoord_t z,
+    bool reverseIntersectionPolicy) const
 {
     auto origin = getOrigin(z);
     auto resolution = getResolution(z);
@@ -29,5 +33,5 @@ ol::tilecoord::TileCoord ol::tilegrid::TileGrid::getTileCoordForXYAndZ_(ol::numb
         tileCoordY = std::floor(tileCoordY);
     }
 
-    return ol::tilecoord::createOrUpdate(z, tileCoordX, tileCoordY/*, opt_tileCoord*/);
+    return ol::tilecoord::createOrUpdate(z, tilecoord_t(tileCoordX), tilecoord_t(tileCoordY));
 }

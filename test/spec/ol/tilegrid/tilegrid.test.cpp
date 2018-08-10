@@ -350,7 +350,7 @@ TEST_F(ol_tilegrid_TileGrid, create12)
 //
 //    it('returns null for an unknown full tile range', function() {
 //      expect(tileGrid.getFullTileRange(0)).to.equal(null);
-    EXPECT_EQ(0, tileGrid.getFullTileRange(0));
+    EXPECT_TRUE(tileGrid.getFullTileRange(0).empty());
 //    });
 //  });
 }
@@ -381,7 +381,7 @@ TEST_F(ol_tilegrid_TileGrid, create13)
     //
     //    it('calculates full tile ranges from extent', function() {
     {
-        auto fullTileRange = *tileGrid.getFullTileRange(0);
+        ol::TileRange fullTileRange = tileGrid.getFullTileRange(0);
         //      expect(fullTileRange.minX).to.equal(0);
         EXPECT_EQ(0, fullTileRange.minX);
         //      expect(fullTileRange.maxX).to.equal(1);
@@ -423,7 +423,7 @@ TEST_F(ol_tilegrid_TileGrid, create14)
     //    it('calculates full tile ranges from sizes', function() {
     {
         //      const fullTileRange = tileGrid.getFullTileRange(0);
-        auto fullTileRange = *tileGrid.getFullTileRange(0);
+        auto fullTileRange = tileGrid.getFullTileRange(0);
         //      expect(fullTileRange.minX).to.equal(0);
         //      expect(fullTileRange.maxX).to.equal(2);
         //      expect(fullTileRange.minY).to.equal(-3);
@@ -460,7 +460,7 @@ TEST_F(ol_tilegrid_TileGrid, create15)
     auto tileGrid = TileGrid(opt);
     //
     //    it('calculates correct minY and maxY for negative heights', function() {
-    auto fullTileRange = *tileGrid.getFullTileRange(0);
+    auto fullTileRange = tileGrid.getFullTileRange(0);
     //      expect(fullTileRange.minY).to.equal(-3);
     //      expect(fullTileRange.maxY).to.equal(-1);
     EXPECT_EQ(-3, fullTileRange.minY);
@@ -489,7 +489,7 @@ TEST_F(ol_tilegrid_TileGrid, create16)
     };
     auto tileGrid = TileGrid(opt);
     //    it('calculates correct minX and maxX for positive heights', function() {
-    auto fullTileRange = *tileGrid.getFullTileRange(0);
+    auto fullTileRange = tileGrid.getFullTileRange(0);
     //      expect(fullTileRange.minY).to.equal(0);
     //      expect(fullTileRange.maxY).to.equal(2);
     EXPECT_EQ(0, fullTileRange.minY);

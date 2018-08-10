@@ -10,6 +10,7 @@
 // */
 
 #include <string>
+#include <vector>
 
 #include "optional.h"
 
@@ -21,6 +22,13 @@ typedef double number_t;
 
 namespace string {
 
+// split
+
+OLQT_EXPORT std::vector<std::string> split(std::string const &s, std::string const &delim);
+inline std::vector<std::string> split(std::string const &s, char delim)
+{
+    return split(s, std::string(1, delim));
+}
 
 /**
  * @param {number} number Number to be formatted

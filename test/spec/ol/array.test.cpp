@@ -486,55 +486,91 @@ TEST(ol_array, isSorted)
 }
 
 //  describe('linearFindNearest', function() {
-//    it('returns expected value', function() {
-//      const arr = [1000, 500, 100];
-//
-//      expect(linearFindNearest(arr, 10000, 0)).to.eql(0);
-//      expect(linearFindNearest(arr, 10000, 1)).to.eql(0);
-//      expect(linearFindNearest(arr, 10000, -1)).to.eql(0);
-//
-//      expect(linearFindNearest(arr, 1000, 0)).to.eql(0);
-//      expect(linearFindNearest(arr, 1000, 1)).to.eql(0);
-//      expect(linearFindNearest(arr, 1000, -1)).to.eql(0);
-//
-//      expect(linearFindNearest(arr, 900, 0)).to.eql(0);
-//      expect(linearFindNearest(arr, 900, 1)).to.eql(0);
-//      expect(linearFindNearest(arr, 900, -1)).to.eql(1);
-//
-//      expect(linearFindNearest(arr, 750, 0)).to.eql(1);
-//      expect(linearFindNearest(arr, 750, 1)).to.eql(0);
-//      expect(linearFindNearest(arr, 750, -1)).to.eql(1);
-//
-//      expect(linearFindNearest(arr, 550, 0)).to.eql(1);
-//      expect(linearFindNearest(arr, 550, 1)).to.eql(0);
-//      expect(linearFindNearest(arr, 550, -1)).to.eql(1);
-//
-//      expect(linearFindNearest(arr, 500, 0)).to.eql(1);
-//      expect(linearFindNearest(arr, 500, 1)).to.eql(1);
-//      expect(linearFindNearest(arr, 500, -1)).to.eql(1);
-//
-//      expect(linearFindNearest(arr, 450, 0)).to.eql(1);
-//      expect(linearFindNearest(arr, 450, 1)).to.eql(1);
-//      expect(linearFindNearest(arr, 450, -1)).to.eql(2);
-//
-//      expect(linearFindNearest(arr, 300, 0)).to.eql(2);
-//      expect(linearFindNearest(arr, 300, 1)).to.eql(1);
-//      expect(linearFindNearest(arr, 300, -1)).to.eql(2);
-//
-//      expect(linearFindNearest(arr, 200, 0)).to.eql(2);
-//      expect(linearFindNearest(arr, 200, 1)).to.eql(1);
-//      expect(linearFindNearest(arr, 200, -1)).to.eql(2);
-//
-//      expect(linearFindNearest(arr, 100, 0)).to.eql(2);
-//      expect(linearFindNearest(arr, 100, 1)).to.eql(2);
-//      expect(linearFindNearest(arr, 100, -1)).to.eql(2);
-//
-//      expect(linearFindNearest(arr, 50, 0)).to.eql(2);
-//      expect(linearFindNearest(arr, 50, 1)).to.eql(2);
-//      expect(linearFindNearest(arr, 50, -1)).to.eql(2);
-//    });
-//  });
-//
+TEST(ol_math, linearFindNearest)
+{
+    //    it('returns expected value', function() {
+    {
+        std::vector<int> arr = { 1000, 500, 100 };
+        //
+        //      expect(linearFindNearest(arr, 10000, 0)).to.eql(0);
+        //      expect(linearFindNearest(arr, 10000, 1)).to.eql(0);
+        //      expect(linearFindNearest(arr, 10000, -1)).to.eql(0);
+        EXPECT_EQ(0, linearFindNearest(arr, 10000, 0));
+        EXPECT_EQ(0, linearFindNearest(arr, 10000, 1));
+        EXPECT_EQ(0, linearFindNearest(arr, 10000, -1));
+        
+        //      expect(linearFindNearest(arr, 1000, 0)).to.eql(0);
+        //      expect(linearFindNearest(arr, 1000, 1)).to.eql(0);
+        //      expect(linearFindNearest(arr, 1000, -1)).to.eql(0);
+        EXPECT_EQ(0, linearFindNearest(arr, 1000, 0));
+        EXPECT_EQ(0, linearFindNearest(arr, 1000, 1));
+        EXPECT_EQ(0, linearFindNearest(arr, 1000, -1));
+
+        //      expect(linearFindNearest(arr, 900, 0)).to.eql(0);
+        //      expect(linearFindNearest(arr, 900, 1)).to.eql(0);
+        //      expect(linearFindNearest(arr, 900, -1)).to.eql(1);
+        EXPECT_EQ(0, linearFindNearest(arr, 900, 0));
+        EXPECT_EQ(0, linearFindNearest(arr, 900, 1));
+        EXPECT_EQ(1, linearFindNearest(arr, 900, -1));
+        
+        //      expect(linearFindNearest(arr, 750, 0)).to.eql(1);
+        //      expect(linearFindNearest(arr, 750, 1)).to.eql(0);
+        //      expect(linearFindNearest(arr, 750, -1)).to.eql(1);
+        EXPECT_EQ(1, linearFindNearest(arr, 750, 0));
+        EXPECT_EQ(0, linearFindNearest(arr, 750, 1));
+        EXPECT_EQ(1, linearFindNearest(arr, 750, -1));
+
+        //      expect(linearFindNearest(arr, 550, 0)).to.eql(1);
+        //      expect(linearFindNearest(arr, 550, 1)).to.eql(0);
+        //      expect(linearFindNearest(arr, 550, -1)).to.eql(1);
+        EXPECT_EQ(1, linearFindNearest(arr, 550, 0));
+        EXPECT_EQ(0, linearFindNearest(arr, 550, 1));
+        EXPECT_EQ(1, linearFindNearest(arr, 550, -1));
+        
+        //      expect(linearFindNearest(arr, 500, 0)).to.eql(1);
+        //      expect(linearFindNearest(arr, 500, 1)).to.eql(1);
+        //      expect(linearFindNearest(arr, 500, -1)).to.eql(1);
+        EXPECT_EQ(1, linearFindNearest(arr, 500, 0));
+        EXPECT_EQ(1, linearFindNearest(arr, 500, 1));
+        EXPECT_EQ(1, linearFindNearest(arr, 500, -1));
+        //
+        //      expect(linearFindNearest(arr, 450, 0)).to.eql(1);
+        //      expect(linearFindNearest(arr, 450, 1)).to.eql(1);
+        //      expect(linearFindNearest(arr, 450, -1)).to.eql(2);
+        EXPECT_EQ(1, linearFindNearest(arr, 450, 0));
+        EXPECT_EQ(1, linearFindNearest(arr, 450, 1));
+        EXPECT_EQ(2, linearFindNearest(arr, 450, -1));
+        
+        //      expect(linearFindNearest(arr, 300, 0)).to.eql(2);
+        //      expect(linearFindNearest(arr, 300, 1)).to.eql(1);
+        //      expect(linearFindNearest(arr, 300, -1)).to.eql(2);
+        EXPECT_EQ(2, linearFindNearest(arr, 300, 0));
+        EXPECT_EQ(1, linearFindNearest(arr, 300, 1));
+        EXPECT_EQ(2, linearFindNearest(arr, 300, -1));
+
+        //      expect(linearFindNearest(arr, 200, 0)).to.eql(2);
+        //      expect(linearFindNearest(arr, 200, 1)).to.eql(1);
+        //      expect(linearFindNearest(arr, 200, -1)).to.eql(2);
+        EXPECT_EQ(2, linearFindNearest(arr, 200, 0));
+        EXPECT_EQ(1, linearFindNearest(arr, 200, 1));
+        EXPECT_EQ(2, linearFindNearest(arr, 200, -1));
+
+        //      expect(linearFindNearest(arr, 100, 0)).to.eql(2);
+        //      expect(linearFindNearest(arr, 100, 1)).to.eql(2);
+        //      expect(linearFindNearest(arr, 100, -1)).to.eql(2);
+        EXPECT_EQ(2, linearFindNearest(arr, 100, 0));
+        EXPECT_EQ(2, linearFindNearest(arr, 100, 1));
+        EXPECT_EQ(2, linearFindNearest(arr, 100, -1));
+
+        //      expect(linearFindNearest(arr, 50, 0)).to.eql(2);
+        //      expect(linearFindNearest(arr, 50, 1)).to.eql(2);
+        //      expect(linearFindNearest(arr, 50, -1)).to.eql(2);
+        EXPECT_EQ(2, linearFindNearest(arr, 50, 0));
+        EXPECT_EQ(2, linearFindNearest(arr, 50, 1));
+        EXPECT_EQ(2, linearFindNearest(arr, 50, -1));
+    }
+}
+
 //  describe('numberSafeCompareFunction', function() {
 //    it('sorts as expected', function() {
 //      const arr = [40, 200, 3000];

@@ -303,16 +303,17 @@ public:
     {
         return extent_;
     }
-    //
-    //
-    ///**
-    // * Get the maximum zoom level for the grid.
-    // * @return {number} Max zoom.
-    // * @api
-    // */
-    //TileGrid.prototype.getMaxZoom = function() {
-    //  return this.maxZoom;
-    //};
+    
+    
+    /**
+     * Get the maximum zoom level for the grid.
+     * @return {number} Max zoom.
+     * @api
+     */
+    int getMaxZoom() const
+    {
+        return maxZoom;
+    }
     
     
     /**
@@ -345,7 +346,7 @@ public:
      * @return {number} Resolution.
      * @api
      */
-    ol::number_t getResolution(int z)
+    ol::number_t getResolution(int z) const
     {
         return resolutions_[z];
     }
@@ -409,7 +410,7 @@ public:
      * @param {module:ol/TileRange=} opt_tileRange Temporary tile range object.
      * @return {module:ol/TileRange} Tile range.
      */
-    ol::TileRange getTileRangeForExtentAndZ(ol::extent::Extent const &extent, int z/*, opt_tileRange*/)
+    ol::TileRange getTileRangeForExtentAndZ(ol::extent::Extent const &extent, int z/*, opt_tileRange*/) const
     {
         auto tileCoord = getTileCoordForXYAndZ_(extent[0], extent[1], z, false/*, tileCoord*/);
         auto minX = tileCoord[1];
@@ -526,8 +527,8 @@ public:
      * @return {module:ol/tilecoord~TileCoord} Tile coordinate.
      * @private
      */
-    ol::tilecoord::TileCoord getTileCoordForXYAndZ_ (ol::number_t x, ol::number_t y, int z, 
-        bool reverseIntersectionPolicy/*, opt_tileCoord*/);;
+ol::tilecoord::TileCoord getTileCoordForXYAndZ_(ol::number_t x, ol::number_t y, ol::tilecoord::tilecoord_t z,
+    bool reverseIntersectionPolicy/*, opt_tileCoord*/) const;
     
     
     ///**
@@ -573,27 +574,28 @@ public:
      * @param {number} z Zoom level.
      * @return {module:ol/TileRange} Extent tile range for the specified zoom level.
      */
-    ol::TileRange const *getFullTileRange(int z) const
+    ol::TileRange const &getFullTileRange(int z) const
     {
         if (!fullTileRanges_.size())
-            return 0;
+            return ol::TileRange::Empty;
 
-        return &fullTileRanges_[z];
+        return fullTileRanges_[z];
     }
     
     
-    ///**
-    // * @param {number} resolution Resolution.
-    // * @param {number=} opt_direction If 0, the nearest resolution will be used.
-    // *     If 1, the nearest lower resolution will be used. If -1, the nearest
-    // *     higher resolution will be used. Default is 0.
-    // * @return {number} Z.
-    // * @api
-    // */
-    //TileGrid.prototype.getZForResolution = function(resolution, opt_direction) {
-    //  const z = linearFindNearest(this.resolutions_, resolution, opt_direction || 0);
-    //  return clamp(z, this.minZoom, this.maxZoom);
-    //};
+    /**
+     * @param {number} resolution Resolution.
+     * @param {number=} opt_direction If 0, the nearest resolution will be used.
+     *     If 1, the nearest lower resolution will be used. If -1, the nearest
+     *     higher resolution will be used. Default is 0.
+     * @return {number} Z.
+     * @api
+     */
+    ol::number_t getZForResolution(number_t resolution, int opt_direction = 0)
+    {
+        size_t z = ol::array::linearFindNearest<ol::number_t>(resolutions_, resolution, opt_direction);
+        return ol::math::clamp(ol::number_t(z), minZoom, maxZoom);
+    }
     
     
     /**

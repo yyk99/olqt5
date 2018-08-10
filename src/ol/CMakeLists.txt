@@ -364,6 +364,7 @@ set(OLQT_SRC
     ./Tile.h
     ./TileCache.cpp
     ./TileCache.h
+    ./tilecoord.cpp
     ./tilecoord.h
     ./tilegrid.cpp
     ./tilegrid.h

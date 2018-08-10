@@ -9,6 +9,34 @@
 
 using namespace ol::string;
 
+TEST(ol_string, split)
+{
+    {
+        auto s = split("1 2 3 4 5", " ");
+        EXPECT_EQ(5, s.size());
+    }
+    {
+        auto s = split("1 2 3 4 5 ", " ");
+        EXPECT_EQ(5, s.size());
+    }
+    {
+        auto s = split(" ", " ");
+        EXPECT_EQ(0, s.size());
+    }
+    {
+        auto s = split(std::string(), " ");
+        EXPECT_EQ(0, s.size());
+    }
+    {
+        auto s = split("1/2/3", '/');
+        EXPECT_EQ(3, s.size());
+    }
+    {
+        auto s = split("1/2/3", "/");
+        EXPECT_EQ(3, s.size());
+    }
+}
+
 //
 //
 //describe('ol.string', function() {

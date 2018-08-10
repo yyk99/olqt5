@@ -30,15 +30,23 @@ public:
     number_t minY;
     number_t maxY;
 
-    TileRange() : minX(), maxX(), minY(), maxY()
+    bool empty_;
+
+    static TileRange Empty;
+
+    TileRange() : minX(), maxX(), minY(), maxY(), empty_(true)
     {}
 
     TileRange(number_t minX, number_t maxX, number_t minY, number_t maxY)
-        : minX(minX), maxX(maxX), minY(minY), maxY(maxY)
+        : minX(minX), maxX(maxX), minY(minY), maxY(maxY), empty_(false)
     {
     }
     
-    
+    bool empty() const
+    {
+        return empty_;
+    }
+
     /**
      * @param {number} minX Minimum X.
      * @param {number} maxX Maximum X.

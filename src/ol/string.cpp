@@ -8,6 +8,8 @@
 #include <sstream>
 
 #include <iostream>
+#include <iterator>
+#include <algorithm>
 
 /**
 * @param {number} number Number to be formatted
@@ -33,10 +35,7 @@ std::string ol::string::padNumber(number_t number, int width, ol::optional<int> 
     return decimal > width ? numberString : std::string(width - decimal, '0') + numberString;
 }
 
-#include <vector>
-#include <algorithm>
-
-std::vector<std::string> split(std::string const &str, std::string const &delim)
+std::vector<std::string> ol::string::split(std::string const &str, std::string const &delim)
 {
     std::vector<std::string> tokens;
     size_t prev = 0, pos = 0;
