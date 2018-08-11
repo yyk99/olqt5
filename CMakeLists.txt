@@ -10,12 +10,8 @@ option (BUILD_TESTS "Buyild tests" ON)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # find proj4 library
-
-message(STATUS $ENV{LOCALAPPDATA}/OSGeo4W/local/include)
-
-find_path(PROJ4_INCLUDE_DIR names proj.h PATH $ENV{LOCALAPPDATA}/OSGeo4W/local/include)
-find_library(PROJ4_LIBRARY_DEBUG names pro_5_0_d.lib PATH $ENV{LOCALAPPDATA}/OSGeo4W/local/lib)
-find_library(PROJ4_LIBRARY_RELEASE names pro_5_0.lib PATH $ENV{LOCALAPPDATA}/OSGeo4W/local/lib)
+# You might want to set PROJ4_DIR variable
+find_package(PROJ4)
 
 add_subdirectory(src)
 
