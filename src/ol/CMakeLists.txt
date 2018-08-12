@@ -27,6 +27,7 @@ set(OLQT_SRC
     ./control/Zoom.h
     ./control/ZoomSlider.h
     ./control/ZoomToExtent.h
+	./coordinate.cpp
     ./coordinate.h
     ./css.h
     ./Disposable.cpp

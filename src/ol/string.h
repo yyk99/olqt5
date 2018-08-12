@@ -37,8 +37,8 @@ inline std::vector<std::string> split(std::string const &s, char delim)
  * @returns {string} Formatted string
  */
 std::string OLQT_EXPORT padNumber(number_t number, int width, ol::optional<int> opt_precision = ol::optional<int>());
-//
-//
+
+
 /**
  * Adapted from https://github.com/omichelsen/compare-versions/blob/master/index.js
  * @param {string|number} v1 First version
@@ -48,6 +48,12 @@ std::string OLQT_EXPORT padNumber(number_t number, int width, ol::optional<int> 
 int OLQT_EXPORT compareVersions(std::string const &v1, std::string const &v2);
 
 int OLQT_EXPORT compareVersions(ol::number_t v1, ol::number_t v2);
+
+/// Replace substring
+OLQT_EXPORT std::string &replaceStringInPlace(std::string &subject, std::string const &search, const std::string& replace);
+
+/// toFixed(number, digits)
+OLQT_EXPORT std::string toFixed(ol::number_t number, int digits);
 
 } // namespace string
 }

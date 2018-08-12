@@ -163,4 +163,36 @@ TEST(ol_string, compareVersions)
     //    });
     //  });
 }
+
+TEST(ol_string, replaceStringInPlace)
+{
+    {
+        std::string subj = "{x} {y}";
+        ol::string::replaceStringInPlace(subj, "{x}", "42");
+
+        EXPECT_EQ("42 {y}", subj);
+    }
+
+    {
+        std::string subj = "{x} {x}";
+        ol::string::replaceStringInPlace(subj, "{x}", "42");
+
+        EXPECT_EQ("42 42", subj);
+    }
+}
+
+TEST(ol_string, toFixed)
+{
+    EXPECT_EQ("42", ol::string::toFixed(42, 0));
+    EXPECT_EQ("42", ol::string::toFixed(42.25, 0));
+    EXPECT_EQ("42", ol::string::toFixed(41.5, 0));
+    EXPECT_EQ("42", ol::string::toFixed(41.99, 0));
+
+    EXPECT_EQ("42.0", ol::string::toFixed(42, 1));
+    EXPECT_EQ("42.3", ol::string::toFixed(42.25, 1));
+    EXPECT_EQ("41.5", ol::string::toFixed(41.5, 1));
+    EXPECT_EQ("42.0", ol::string::toFixed(41.99, 1));
+
+}
+
 //});

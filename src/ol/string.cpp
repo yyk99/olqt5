@@ -81,4 +81,38 @@ int OLQT_EXPORT ol::string::compareVersions(ol::number_t v1, ol::number_t v2)
     return compareVersions(std::to_string(v1), std::to_string(v2));
 }
 
+/// Replace substring
+OLQT_EXPORT std::string & ol::string::replaceStringInPlace(std::string &subject, std::string const &search, const std::string &replace) {
+    size_t pos = 0;
+    while ((pos = subject.find(search, pos)) != std::string::npos) {
+        subject.replace(pos, search.length(), replace);
+        pos += replace.length();
+    }
+
+    return subject;
+}
+
+#include <stdio.h>
+
+/// toFixed(number, digits)
+OLQT_EXPORT std::string ol::string::toFixed(ol::number_t number, int digits)
+{
+    if (digits == 0)
+        return std::to_string(int(number + 0.5));
+
+    if (digits < 0)
+        throw std::runtime_error("toFixed: negative decimal positions");
+
+    double norm = std::pow(10, digits);
+    number = std::floor(number * norm + 0.5);
+    number /= norm;
+
+    char buff[128];
+    char fmt[128];
+    sprintf(fmt, "%%.%df", digits);
+    sprintf(buff, fmt, double(number));
+
+    return buff;
+}
+
 //
